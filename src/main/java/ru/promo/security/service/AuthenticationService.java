@@ -10,7 +10,7 @@ import ru.promo.security.controller.domain.SignInRequest;
 import ru.promo.security.controller.domain.SignUpRequest;
 import ru.promo.security.controller.domain.TokenResponse;
 import ru.promo.security.domain.Role;
-import ru.promo.security.domain.entity.Employee;
+import ru.promo.security.domain.entity.Account;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class AuthenticationService {
     @Transactional
     public TokenResponse signUp(SignUpRequest request) {
 
-        var user = Employee.builder()
+        var user = Account.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ADMIN)

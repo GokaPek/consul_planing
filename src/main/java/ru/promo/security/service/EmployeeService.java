@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.promo.security.domain.entity.Employee;
+import ru.promo.security.domain.entity.Account;
 import ru.promo.security.repository.EmployeeRepository;
 
 @Service
@@ -14,12 +14,12 @@ public class EmployeeService {
 
     private final EmployeeRepository repository;
 
-    public Employee save(Employee user) {
+    public Account save(Account user) {
         return repository.save(user);
     }
 
 
-    public Employee create(Employee user) {
+    public Account create(Account user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Пользователь с таким именем уже существует");
             }
@@ -27,7 +27,7 @@ public class EmployeeService {
         return save(user);
     }
 
-    public Employee getByUsername(String username) {
+    public Account getByUsername(String username) {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
@@ -38,7 +38,7 @@ public class EmployeeService {
     }
 
     //todo пример как из контекста достать пользователя
-    public Employee getCurrentUser() {
+    public Account getCurrentUser() {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return getByUsername(username);
     }

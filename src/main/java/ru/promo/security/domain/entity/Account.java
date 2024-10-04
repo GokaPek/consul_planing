@@ -25,8 +25,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "employee")
-public class Employee implements UserDetails {
+@Table(name = "account")
+public class Account implements UserDetails {
 
     @Id
     @GeneratedValue
