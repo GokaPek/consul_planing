@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class EmployeeController {
+public class AccountController {
 
     //Под авторизацией всем
     @GetMapping("/promo/all-auth")

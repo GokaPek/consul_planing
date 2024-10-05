@@ -22,7 +22,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     public static final String BEARER_PREFIX = "Bearer ";
     private final JwtService jwtService;
-    private final EmployeeService employeeService;
+    private final AccountService accountService;
 
     @Override
     protected void doFilterInternal(
@@ -44,7 +44,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         var username = jwtService.extractUserName(jwt);
 
         if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = employeeService
+            UserDetails userDetails = accountService
                     .userDetailsService()
                     .loadUserByUsername(username);
 

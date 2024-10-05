@@ -16,7 +16,7 @@ import ru.promo.consul_plan.domain.entity.Account;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final EmployeeService employeeService;
+    private final AccountService accountService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -30,7 +30,7 @@ public class AuthenticationService {
                 .role(Role.ADMIN)
                 .build();
 
-        employeeService.create(user);
+        accountService.create(user);
 
         var jwt = jwtService.generateToken(user);
         return new TokenResponse(jwt);
@@ -42,7 +42,7 @@ public class AuthenticationService {
                 request.getPassword()
         ));
 
-        var user = employeeService.userDetailsService()
+        var user = accountService.userDetailsService()
                 .loadUserByUsername(request.getUsername());
 
         var jwt = jwtService.generateToken(user);

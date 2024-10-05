@@ -6,13 +6,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.entity.Account;
-import ru.promo.consul_plan.repository.EmployeeRepository;
+import ru.promo.consul_plan.repository.AccountRepository;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeService {
+public class AccountService {
 
-    private final EmployeeRepository repository;
+    private final AccountRepository repository;
 
     public Account save(Account user) {
         return repository.save(user);

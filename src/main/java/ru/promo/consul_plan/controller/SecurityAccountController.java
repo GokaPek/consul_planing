@@ -12,7 +12,7 @@ import ru.promo.consul_plan.service.AuthenticationService;
 
 @RestController
 @RequiredArgsConstructor
-public class SecurityEmployeeController {
+public class SecurityAccountController {
 
     private final AuthenticationService authenticationService;
 

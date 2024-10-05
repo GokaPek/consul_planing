@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import ru.promo.consul_plan.service.AuthenticationFilter;
-import ru.promo.consul_plan.service.EmployeeService;
+import ru.promo.consul_plan.service.AccountService;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration {
 
     private final AuthenticationFilter authenticationFilter;
-    private final EmployeeService employeeService;
+    private final AccountService accountService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -62,7 +62,7 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(employeeService.userDetailsService());
+        authProvider.setUserDetailsService(accountService.userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
