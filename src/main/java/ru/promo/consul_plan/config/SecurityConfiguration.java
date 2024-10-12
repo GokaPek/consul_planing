@@ -45,8 +45,11 @@ public class SecurityConfiguration {
                 }))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // Разрешить доступ к Swagger UI для всех
                         //.requestMatchers( "/admin").hasRole("ADMIN")
+                        //.requestMatchers( "/specialist").hasRole("SPECIALIST")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())

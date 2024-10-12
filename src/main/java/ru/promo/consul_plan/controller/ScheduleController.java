@@ -3,10 +3,12 @@ package ru.promo.consul_plan.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.promo.consul_plan.dto.ScheduleDTO;
 import ru.promo.consul_plan.entity.ScheduleEntity;
 import ru.promo.consul_plan.service.ScheduleService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/schedules")
@@ -16,9 +18,10 @@ public class ScheduleController {
     private ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleEntity> createSchedule(@RequestBody ScheduleEntity schedule) {
-        scheduleService.create(schedule);
-        return ResponseEntity.ok(schedule);
+    public ResponseEntity<Void> createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
+
+        scheduleService.create(scheduleDTO);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
@@ -28,9 +31,9 @@ public class ScheduleController {
     }
 
     @PutMapping
-    public ResponseEntity<ScheduleEntity> updateSchedule(@RequestBody ScheduleEntity schedule) {
-        scheduleService.update(schedule);
-        return ResponseEntity.ok(schedule);
+    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleDTO scheduleDTO) {
+        scheduleService.update(scheduleDTO);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

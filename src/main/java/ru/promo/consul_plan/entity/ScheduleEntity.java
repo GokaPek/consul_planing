@@ -4,6 +4,7 @@ package ru.promo.consul_plan.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
@@ -18,7 +19,7 @@ public class ScheduleEntity {
     @JoinColumn(name = "specialist_id")
     private SpecialistEntity specialist;
 
-    private String dayOfWeek;
+    private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
 }
