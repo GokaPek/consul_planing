@@ -26,7 +26,7 @@ public class ConsultationEntity {
 
     @ManyToOne
     @JoinColumn(name = "specialist_id")
-    private SpecialistEntity entity;
+    private SpecialistEntity specialist;
 
     private LocalDateTime dateTime;
     private String status;
