@@ -8,7 +8,6 @@ import ru.promo.consul_plan.entity.ScheduleEntity;
 import ru.promo.consul_plan.service.ScheduleService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/schedules")
@@ -19,7 +18,6 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<Void> createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
-
         scheduleService.create(scheduleDTO);
         return ResponseEntity.ok().build();
     }

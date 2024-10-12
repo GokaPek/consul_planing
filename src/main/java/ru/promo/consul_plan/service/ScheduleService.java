@@ -8,8 +8,9 @@ import ru.promo.consul_plan.entity.SpecialistEntity;
 import ru.promo.consul_plan.repository.ScheduleRepository;
 import ru.promo.consul_plan.repository.SpecialistRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +23,12 @@ public class ScheduleService implements IScheduleService {
     public void create(ScheduleDTO dto) {
         SpecialistEntity specialist = specialistRepository.findById(dto.getSpecialistId())
                 .orElseThrow(() -> new IllegalArgumentException("Specialist not found"));
+
         ScheduleEntity entity = new ScheduleEntity();
         entity.setSpecialist(specialist);
         entity.setDate(dto.getDate());
-        entity.setStartTime(dto.getStartTime());
-        entity.setEndTime(dto.getEndTime());
+        entity.setStartTime(LocalTime.parse(dto.getStartTime()));
+        entity.setEndTime(LocalTime.parse(dto.getEndTime()));
 
         scheduleRepository.save(entity);
     }
@@ -46,8 +48,8 @@ public class ScheduleService implements IScheduleService {
             entity.setId(dto.getId());
             entity.setSpecialist(specialist);
             entity.setDate(dto.getDate());
-            entity.setStartTime(dto.getStartTime());
-            entity.setEndTime(dto.getEndTime());
+            entity.setStartTime(LocalTime.parse(dto.getStartTime()));
+            entity.setEndTime(LocalTime.parse(dto.getEndTime()));
 
             scheduleRepository.save(entity);
         }
