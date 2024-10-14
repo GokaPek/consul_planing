@@ -1,6 +1,8 @@
 package ru.promo.consul_plan.service;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.dto.NotificationDTO;
 import ru.promo.consul_plan.entity.ConsultationEntity;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 public class NotificationService implements INotificationService {
 
     private final NotificationRepository notificationRepository;
+    @Autowired
+    private final EmailService emailService;
 
     @Override
     public void create(NotificationEntity entity) {
@@ -51,16 +55,41 @@ public class NotificationService implements INotificationService {
         return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+//    @Override
+//    public void sendReminder(Long consultationId) {
+//        // Логика отправки напоминания
+//        NotificationEntity reminder = new NotificationEntity();
+//        reminder.setConsultation(new ConsultationEntity());
+//        reminder.setId(consultationId);
+//        reminder.setType("reminder");
+//        reminder.setSentDateTime(LocalDateTime.now());
+//        reminder.setStatus("sent");
+//        notificationRepository.save(reminder);
+//    }
+
     @Override
-    public void sendReminder(Long consultationId) {
+    public void sendReminder(ConsultationEntity consultation) {
+
+
+
         // Логика отправки напоминания
         NotificationEntity reminder = new NotificationEntity();
-        reminder.setConsultation(new ConsultationEntity());
-        reminder.setId(consultationId);
+        reminder.setConsultation(consultation);
+        reminder.setId(consultation.getId());
         reminder.setType("reminder");
         reminder.setSentDateTime(LocalDateTime.now());
         reminder.setStatus("sent");
         notificationRepository.save(reminder);
+
+        // Отправка уведомления по электронной почте
+        try {
+            String email = "slind339@gmail.com"; // Замените на реальный email пользователя
+            String subject = "Напоминание о консультации";
+            String text = "Уважаемый пользователь, напоминаем вам о предстоящей консультации.";
+            emailService.sendEmail(email, subject, text);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
     private NotificationDTO convertToDTO(NotificationEntity entity) {

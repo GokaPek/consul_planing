@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.dto.NotificationDTO;
 import ru.promo.consul_plan.entity.NotificationEntity;
+import ru.promo.consul_plan.service.ConsultationService;
 import ru.promo.consul_plan.service.NotificationService;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private ConsultationService consultationService;
+
 
     @PostMapping
     public ResponseEntity<NotificationEntity> createNotification(@RequestBody NotificationEntity notification) {
@@ -54,7 +58,8 @@ public class NotificationController {
 
     @PostMapping("/reminder/{consultationId}")
     public ResponseEntity<Void> sendReminder(@RequestParam(name = "consultation", defaultValue = "0") Long consultationId) {
-        notificationService.sendReminder(consultationId);
+        var consultation = consultationService.getById(consultationId);
+        notificationService.sendReminder(consultation);
         return ResponseEntity.noContent().build();
     }
 }
