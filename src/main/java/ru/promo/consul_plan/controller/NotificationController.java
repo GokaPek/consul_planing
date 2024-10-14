@@ -52,7 +52,6 @@ public class NotificationController {
         return ResponseEntity.ok(notificationsDTO);
     }
 
-
     @PostMapping("/reminder/{consultationId}")
     public ResponseEntity<Void> sendReminder(@RequestParam(name = "consultation", defaultValue = "0") Long consultationId) {
         notificationService.sendReminder(consultationId);
