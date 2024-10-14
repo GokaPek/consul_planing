@@ -1,6 +1,7 @@
 package ru.promo.consul_plan.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.entity.ConsultationEntity;
@@ -15,38 +16,42 @@ public class ConsultationController {
     @Autowired
     private ConsultationService consultationService;
 
-    @GetMapping("/available")
-    public ResponseEntity<List<ConsultationEntity>> getAvailableConsultations() {
-        List<ConsultationEntity> availableConsultations = consultationService.getAvailableConsultations();
-        return ResponseEntity.ok(availableConsultations);
-    }
+    @Autowired
+    private ConsultationService scheduleService;
+//    @GetMapping("/available")
+//    public ResponseEntity<List<ConsultationEntity>> getAvailableConsultations() {
+//        List<ConsultationEntity> availableConsultations = consultationService.getAvailableConsultations();
+//        return ResponseEntity.ok(availableConsultations);
+//    }
 
     @PostMapping("/reserve")
-    public ResponseEntity<ConsultationEntity> reserveConsultation(@RequestBody ConsultationEntity consultation) {
-        ConsultationEntity reservedConsultation = consultationService.reserveConsultation(consultation);
+    public ResponseEntity<ConsultationEntity> reserveConsultation(@RequestParam(name = "schedule", defaultValue = "0") Long scheduleId, @RequestParam(name = "client", defaultValue = "0") Long clientId) throws ChangeSetPersister.NotFoundException {
+        ConsultationEntity reservedConsultation = consultationService.reserveConsultation(scheduleId, clientId);
         return ResponseEntity.ok(reservedConsultation);
     }
 
+    // TODO
+
     @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<ConsultationEntity>> getClientConsultations(@PathVariable Long clientId) {
+    public ResponseEntity<List<ConsultationEntity>> getClientConsultations(@RequestParam(name = "client", defaultValue = "0") Long clientId) {
         List<ConsultationEntity> clientConsultations = consultationService.getClientConsultations(clientId);
         return ResponseEntity.ok(clientConsultations);
     }
 
     @GetMapping("/specialist/{specialistId}")
-    public ResponseEntity<List<ConsultationEntity>> getSpecialistConsultations(@PathVariable Long specialistId) {
+    public ResponseEntity<List<ConsultationEntity>> getSpecialistConsultations(@RequestParam(name = "specialist", defaultValue = "0") Long specialistId) {
         List<ConsultationEntity> specialistConsultations = consultationService.getSpecialistConsultations(specialistId);
         return ResponseEntity.ok(specialistConsultations);
     }
 
     @PostMapping("/confirm/{consultationId}")
-    public ResponseEntity<ConsultationEntity> confirmConsultation(@PathVariable Long consultationId) {
+    public ResponseEntity<ConsultationEntity> confirmConsultation(@RequestParam(name = "consultation", defaultValue = "0") Long consultationId) {
         ConsultationEntity confirmedConsultation = consultationService.confirmConsultation(consultationId);
         return ResponseEntity.ok(confirmedConsultation);
     }
 
     @PostMapping("/cancel/{consultationId}")
-    public ResponseEntity<ConsultationEntity> cancelConsultation(@PathVariable Long consultationId) {
+    public ResponseEntity<ConsultationEntity> cancelConsultation(@RequestParam(name = "consultation", defaultValue = "0") Long consultationId) {
         ConsultationEntity cancelledConsultation = consultationService.cancelConsultation(consultationId);
         return ResponseEntity.ok(cancelledConsultation);
     }

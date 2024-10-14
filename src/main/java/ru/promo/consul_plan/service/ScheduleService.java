@@ -64,4 +64,9 @@ public class ScheduleService implements IScheduleService {
     public List<ScheduleEntity> getAllBySpecialistId(Long specialistId) {
         return scheduleRepository.findAllBySpecialistId(specialistId);
     }
+
+    @Override
+    public List<ScheduleEntity> getAll() {
+        return scheduleRepository.findAll();
+    }
 }

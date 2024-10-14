@@ -50,15 +50,15 @@ public class ScheduleServiceTest {
         scheduleDTO = new ScheduleDTO();
         scheduleDTO.setSpecialistId(specialistId);
         scheduleDTO.setDate(LocalDate.of(2024, 10, 13));
-        scheduleDTO.setStartTime(LocalTime.of(9, 0));
-        scheduleDTO.setEndTime(LocalTime.of(10, 0));
+        scheduleDTO.setStartTime(String.valueOf(LocalTime.of(9, 0)));
+        scheduleDTO.setEndTime(String.valueOf(LocalTime.of(10, 0)));
 
         scheduleEntity = new ScheduleEntity();
         scheduleEntity.setId(1L);
         scheduleEntity.setSpecialist(specialistEntity);
         scheduleEntity.setDate(scheduleDTO.getDate());
-        scheduleEntity.setStartTime(scheduleDTO.getStartTime());
-        scheduleEntity.setEndTime(scheduleDTO.getEndTime());
+        scheduleEntity.setStartTime(LocalTime.parse(scheduleDTO.getStartTime()));
+        scheduleEntity.setEndTime(LocalTime.parse(scheduleDTO.getEndTime()));
     }
 
     @Test

@@ -11,4 +11,6 @@ public interface IScheduleService {
     void update(ScheduleDTO dto);
     void delete(Long id);
     List<ScheduleEntity> getAllBySpecialistId(Long specialistId);
+    List<ScheduleEntity> getAll();
+
 }

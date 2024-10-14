@@ -1,6 +1,7 @@
 package ru.promo.consul_plan.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.entity.ConsultationEntity;
 import ru.promo.consul_plan.entity.NotificationEntity;
@@ -15,6 +16,8 @@ public class ConsultationService implements IConsultationService {
 
     private final ConsultationRepository consultationRepository;
     private final NotificationService notificationService;
+    private final ScheduleService scheduleService;
+    private final ClientService clientService;
 
     @Override
     public void create(ConsultationEntity entity) {
@@ -27,12 +30,16 @@ public class ConsultationService implements IConsultationService {
     }
 
     @Override
-    public List<ConsultationEntity> getAvailableConsultations() {
-        return consultationRepository.findByStatus("available");
-    }
+    public ConsultationEntity reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
 
-    @Override
-    public ConsultationEntity reserveConsultation(ConsultationEntity consultation) {
+        var schedule = scheduleService.getById(scheduleId);
+        var client = clientService.getById(clientId);
+
+        ConsultationEntity consultation = new ConsultationEntity();
+
+        consultation.setClient(client);
+        consultation.setSpecialist(schedule.getSpecialist());
+        consultation.setReminderSent(false);
         consultation.setStatus("reserved");
         ConsultationEntity reservedConsultation = consultationRepository.save(consultation);
 
