@@ -30,8 +30,6 @@ public class ConsultationController {
         return ResponseEntity.ok(reservedConsultation);
     }
 
-    // TODO
-
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<ConsultationEntity>> getClientConsultations(@RequestParam(name = "client", defaultValue = "0") Long clientId) {
         List<ConsultationEntity> clientConsultations = consultationService.getClientConsultations(clientId);
