@@ -2,6 +2,7 @@ package ru.promo.consul_plan.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.entity.ConsultationEntity;
 import ru.promo.consul_plan.entity.NotificationEntity;
@@ -104,5 +105,21 @@ public class ConsultationService implements IConsultationService {
             return cancelledConsultation;
         }
         return null;
+    }
+
+    // автоматические напоминания
+    @Scheduled(cron = "0 0 12 * * ?") // Запускать каждый день в 12:00
+    public void sendDailyReminders() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime tomorrow = now.plusDays(1);
+
+        List<ConsultationEntity> consultations = consultationRepository.findAllByDateTimeBetween(
+                tomorrow.toLocalDate().atStartOfDay(),
+                tomorrow.toLocalDate().atTime(23, 59, 59)
+        );
+
+        for (ConsultationEntity consultation : consultations) {
+            notificationService.sendReminder(consultation);
+        }
     }
 }

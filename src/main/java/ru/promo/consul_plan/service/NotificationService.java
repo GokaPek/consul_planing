@@ -3,6 +3,7 @@ package ru.promo.consul_plan.service;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.dto.NotificationDTO;
 import ru.promo.consul_plan.entity.ConsultationEntity;
@@ -104,6 +105,4 @@ public class NotificationService implements INotificationService {
         dto.setStatus(entity.getStatus());
         return dto;
     }
-
-
 }
