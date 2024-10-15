@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.dto.ScheduleDTO;
 import ru.promo.consul_plan.entity.ConsultationEntity;
 import ru.promo.consul_plan.entity.NotificationEntity;
 import ru.promo.consul_plan.entity.ScheduleEntity;
+import ru.promo.consul_plan.entity.TypeStatus;
 import ru.promo.consul_plan.repository.ConsultationRepository;
 
 import java.time.LocalDateTime;
@@ -44,13 +44,13 @@ public class ConsultationService implements IConsultationService {
         consultation.setSchedule(schedule);
         consultation.setSpecialist(schedule.getSpecialist());
         consultation.setReminderSent(false);
-        consultation.setStatus("reserved");
+        consultation.setStatus(TypeStatus.RESERVED);
         ConsultationEntity reservedConsultation = consultationRepository.save(consultation);
 
         // Создание уведомления о резервировании консультации
         NotificationEntity notification = new NotificationEntity();
         notification.setConsultation(reservedConsultation);
-        notification.setType("reservation");
+        notification.setType(TypeStatus.RESERVED);
         notification.setSentDateTime(LocalDateTime.now());
         notification.setStatus("sent");
         notificationService.create(notification);
@@ -77,13 +77,13 @@ public class ConsultationService implements IConsultationService {
     public ConsultationEntity confirmConsultation(Long consultationId) {
         ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
         if (consultation != null) {
-            consultation.setStatus("confirmed");
+            consultation.setStatus(TypeStatus.CONFORMED);
             ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
             // Создание уведомления о подтверждении консультации
             NotificationEntity notification = new NotificationEntity();
             notification.setConsultation(confirmedConsultation);
-            notification.setType("confirmation");
+            notification.setType(TypeStatus.CONFORMED);
             notification.setSentDateTime(LocalDateTime.now());
             notification.setStatus("sent");
             notificationService.create(notification);
@@ -98,13 +98,13 @@ public class ConsultationService implements IConsultationService {
     public ConsultationEntity cancelConsultation(Long consultationId) {
         ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
         if (consultation != null) {
-            consultation.setStatus("cancelled");
+            consultation.setStatus(TypeStatus.CANCELLED);
             ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
             // Создание уведомления об отмене консультации
             NotificationEntity notification = new NotificationEntity();
             notification.setConsultation(cancelledConsultation);
-            notification.setType("cancellation");
+            notification.setType(TypeStatus.CANCELLED);
             notification.setSentDateTime(LocalDateTime.now());
             notification.setStatus("sent");
             notificationService.create(notification);
@@ -130,7 +130,7 @@ public class ConsultationService implements IConsultationService {
         for (ScheduleEntity entity : entities){
             var consultations = consultationRepository.findByClientId(entity.getClient().getId());
             for (ConsultationEntity consultation : consultations) {
-                if (consultation.getStatus() == "confirmed"){
+                if (consultation.getStatus() == TypeStatus.CONFORMED){
                     notificationService.sendReminder(consultation);
                     consultation.setReminderSent(true);
                 }

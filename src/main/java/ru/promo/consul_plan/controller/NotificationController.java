@@ -45,15 +45,15 @@ public class NotificationController {
     }
 
     @GetMapping("/consultation/{consultationId}")
-    public ResponseEntity<List<NotificationDTO>> getNotificationsByConsultationId(@RequestParam(name = "consultation", defaultValue = "0") Long consultationId) {
-        List<NotificationDTO> notificationsDTO = notificationService.getAllByConsultationId(consultationId);
-        return ResponseEntity.ok(notificationsDTO);
+    public ResponseEntity<List<NotificationEntity>> getNotificationsByConsultationId(@RequestParam(name = "consultation", defaultValue = "0") Long consultationId) {
+        List<NotificationEntity> notificationsEntity = notificationService.getAllByConsultationId(consultationId);
+        return ResponseEntity.ok(notificationsEntity);
     }
 
     @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<NotificationDTO>> getNotificationsByClientId(@RequestParam(name = "client", defaultValue = "0") Long clientId) {
-        List<NotificationDTO> notificationsDTO = notificationService.getAllByClientId(clientId);
-        return ResponseEntity.ok(notificationsDTO);
+    public ResponseEntity<List<NotificationEntity>> getNotificationsByClientId(@RequestParam(name = "client", defaultValue = "0") Long clientId) {
+        List<NotificationEntity> notificationsEntity = notificationService.getAllByClientId(clientId);
+        return ResponseEntity.ok(notificationsEntity);
     }
 
     @PostMapping("/reminder/{consultationId}")

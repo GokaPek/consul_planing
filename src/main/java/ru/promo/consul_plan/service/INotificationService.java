@@ -11,8 +11,8 @@ public interface INotificationService {
     NotificationEntity getById(Long id);
     void update(NotificationEntity entity);
     void delete(Long id);
-    List<NotificationDTO> getAllByConsultationId(Long consultationId);
-    List<NotificationDTO> getAllByClientId(Long clientId);
+    List<NotificationEntity> getAllByConsultationId(Long consultationId);
+    List<NotificationEntity> getAllByClientId(Long clientId);
 
     void sendReminder(ConsultationEntity consultation);
 }

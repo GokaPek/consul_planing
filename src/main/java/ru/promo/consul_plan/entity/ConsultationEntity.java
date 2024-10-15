@@ -1,16 +1,7 @@
 package ru.promo.consul_plan.entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -32,6 +23,7 @@ public class ConsultationEntity {
     @JoinColumn(name = "schedule_id")
     private ScheduleEntity schedule;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TypeStatus status;
     private boolean reminderSent;
 }

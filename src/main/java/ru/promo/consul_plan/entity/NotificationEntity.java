@@ -17,7 +17,8 @@ public class NotificationEntity {
     @JoinColumn(name = "consultation_id")
     private ConsultationEntity consultation;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private TypeStatus type;
     private LocalDateTime sentDateTime;
     private String status;
 }

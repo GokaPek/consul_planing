@@ -3,11 +3,11 @@ package ru.promo.consul_plan.service;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.dto.NotificationDTO;
 import ru.promo.consul_plan.entity.ConsultationEntity;
 import ru.promo.consul_plan.entity.NotificationEntity;
+import ru.promo.consul_plan.entity.TypeStatus;
 import ru.promo.consul_plan.repository.NotificationRepository;
 
 import java.time.LocalDateTime;
@@ -45,15 +45,17 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<NotificationDTO> getAllByConsultationId(Long consultationId) {
-        List<NotificationEntity> entities = notificationRepository.findAllByConsultationId(consultationId);
-        return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<NotificationEntity> getAllByConsultationId(Long consultationId) {
+        // List<NotificationEntity> entities =
+        return notificationRepository.findAllByConsultationId(consultationId);
+        // return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<NotificationDTO> getAllByClientId(Long clientId) {
-        List<NotificationEntity> entities = notificationRepository.findAllByConsultationClientId(clientId);
-        return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
+    public List<NotificationEntity> getAllByClientId(Long clientId) {
+        // List<NotificationEntity> entities =
+        return notificationRepository.findAllByConsultationClientId(clientId);
+        //return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
 //    @Override
@@ -77,10 +79,12 @@ public class NotificationService implements INotificationService {
         NotificationEntity reminder = new NotificationEntity();
         reminder.setConsultation(consultation);
         reminder.setId(consultation.getId());
-        reminder.setType("reminder");
+        reminder.setType(TypeStatus.REMAINED);
         reminder.setSentDateTime(LocalDateTime.now());
         reminder.setStatus("sent");
         notificationRepository.save(reminder);
+
+        String massage;
 
         // Отправка уведомления по электронной почте
         try {
@@ -100,7 +104,7 @@ public class NotificationService implements INotificationService {
         NotificationDTO dto = new NotificationDTO();
         dto.setId(entity.getId());
         dto.setConsultationId(entity.getConsultation().getId());
-        dto.setType(entity.getType());
+        dto.setType(entity.getType().name());
         dto.setSentDateTime(entity.getSentDateTime());
         dto.setStatus(entity.getStatus());
         return dto;

@@ -1,6 +1,7 @@
 package ru.promo.consul_plan.dto;
 
 import lombok.Data;
+import ru.promo.consul_plan.entity.TypeStatus;
 
 import java.time.LocalDateTime;
 
