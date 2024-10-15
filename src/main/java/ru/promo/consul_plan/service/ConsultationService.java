@@ -64,6 +64,7 @@ public class ConsultationService implements IConsultationService {
         return consultationRepository.findBySpecialistId(specialistId);
     }
 
+    // TODO
     @Override
     public ConsultationEntity confirmConsultation(Long consultationId) {
         ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
@@ -78,6 +79,7 @@ public class ConsultationService implements IConsultationService {
             notification.setSentDateTime(LocalDateTime.now());
             notification.setStatus("sent");
             notificationService.create(notification);
+            notificationService.sendReminder(consultation);
 
             return confirmedConsultation;
         }

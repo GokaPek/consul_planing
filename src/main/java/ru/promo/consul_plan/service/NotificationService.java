@@ -70,7 +70,7 @@ public class NotificationService implements INotificationService {
     @Override
     public void sendReminder(ConsultationEntity consultation) {
 
-
+        var client = consultation.getClient();
 
         // Логика отправки напоминания
         NotificationEntity reminder = new NotificationEntity();
@@ -83,9 +83,9 @@ public class NotificationService implements INotificationService {
 
         // Отправка уведомления по электронной почте
         try {
-            String email = "slind339@gmail.com"; // Замените на реальный email пользователя
+            String email = client.getAccount().getUsername();
             String subject = "Напоминание о консультации";
-            String text = "Уважаемый пользователь, напоминаем вам о предстоящей консультации.";
+            String text = "Уважаемый пользователь, напоминаем вам о предстоящей консультации у специалиста " + consultation.getSpecialist().getAccount().getUsername();
             emailService.sendEmail(email, subject, text);
         } catch (MessagingException e) {
             e.printStackTrace();
