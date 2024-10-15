@@ -56,17 +56,29 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
+    public void update(ScheduleEntity entity) {
+        if (scheduleRepository.existsById(entity.getId())) {
+            scheduleRepository.save(entity);
+        }
+    }
+
+    @Override
     public void delete(Long id) {
         scheduleRepository.deleteById(id);
     }
 
     @Override
     public List<ScheduleEntity> getAllBySpecialistId(Long specialistId) {
-        return scheduleRepository.findAllBySpecialistId(specialistId);
+        return scheduleRepository.findAllBySpecialistIdAndClientIsNull(specialistId);
     }
 
     @Override
     public List<ScheduleEntity> getAll() {
         return scheduleRepository.findAll();
+    }
+
+    @Override
+    public List<ScheduleEntity> findAllByDateTimeBetween(LocalDate localDate) {
+        return scheduleRepository.findAllByDate(localDate);
     }
 }

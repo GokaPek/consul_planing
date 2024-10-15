@@ -21,12 +21,17 @@ public class ConsultationEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "specialist_id")
+    private SpecialistEntity specialist;
+
+    @ManyToOne
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 
     @ManyToOne
-    @JoinColumn(name = "specialist_id")
-    private SpecialistEntity specialist;
+    @JoinColumn(name = "schedule_id")
+    private ScheduleEntity schedule;
+
     private String status;
     private boolean reminderSent;
 }

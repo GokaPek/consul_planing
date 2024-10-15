@@ -18,6 +18,9 @@ public class ScheduleEntity {
     @ManyToOne
     @JoinColumn(name = "specialist_id")
     private SpecialistEntity specialist;
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private ClientEntity client;
 
     private LocalDate date;
     private LocalTime startTime;

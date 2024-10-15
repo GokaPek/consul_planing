@@ -128,7 +128,15 @@
 				<artifactId>jjwt-jackson</artifactId>
 				<version>0.12.3</version>
 			</dependency>
+
+
+			<dependency>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-core</artifactId>
+				<version>4.6.2</version> <!-- Укажите актуальную версию -->
+			</dependency>
 		</dependencies>
+
 	</dependencyManagement>
 
 	<build>

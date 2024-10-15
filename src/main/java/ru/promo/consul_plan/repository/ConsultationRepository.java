@@ -18,5 +18,5 @@ public interface ConsultationRepository extends JpaRepository<ConsultationEntity
     @Query("SELECT c FROM ConsultationEntity c WHERE c.specialist.id = :specialistId")
     List<ConsultationEntity> findBySpecialistId(@Param("specialistId") Long specialistId);
 
-    List<ConsultationEntity> findAllByDateTimeBetween(LocalDateTime start, LocalDateTime end);
+    List<ConsultationEntity> findAllByClientId(Long clientId);
 }

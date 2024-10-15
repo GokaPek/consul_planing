@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import ru.promo.consul_plan.dto.ScheduleDTO;
 import ru.promo.consul_plan.entity.ConsultationEntity;
 import ru.promo.consul_plan.entity.NotificationEntity;
+import ru.promo.consul_plan.entity.ScheduleEntity;
 import ru.promo.consul_plan.repository.ConsultationRepository;
 
 import java.time.LocalDateTime;
@@ -39,6 +41,7 @@ public class ConsultationService implements IConsultationService {
         ConsultationEntity consultation = new ConsultationEntity();
 
         consultation.setClient(client);
+        consultation.setSchedule(schedule);
         consultation.setSpecialist(schedule.getSpecialist());
         consultation.setReminderSent(false);
         consultation.setStatus("reserved");
@@ -51,6 +54,10 @@ public class ConsultationService implements IConsultationService {
         notification.setSentDateTime(LocalDateTime.now());
         notification.setStatus("sent");
         notificationService.create(notification);
+
+        schedule.setClient(client);
+
+        scheduleService.update(schedule);
 
         return reservedConsultation;
     }
@@ -102,6 +109,11 @@ public class ConsultationService implements IConsultationService {
             notification.setStatus("sent");
             notificationService.create(notification);
 
+            ScheduleEntity schedule = consultation.getSchedule();
+            schedule.setClient(null);
+
+            scheduleService.update(schedule);
+
             return cancelledConsultation;
         }
         return null;
@@ -113,13 +125,16 @@ public class ConsultationService implements IConsultationService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime tomorrow = now.plusDays(1);
 
-        List<ConsultationEntity> consultations = consultationRepository.findAllByDateTimeBetween(
-                tomorrow.toLocalDate().atStartOfDay(),
-                tomorrow.toLocalDate().atTime(23, 59, 59)
-        );
+        List<ScheduleEntity> entities = scheduleService.findAllByDateTimeBetween(tomorrow.toLocalDate());
 
-        for (ConsultationEntity consultation : consultations) {
-            notificationService.sendReminder(consultation);
+        for (ScheduleEntity entity : entities){
+            var consultations = consultationRepository.findByClientId(entity.getClient().getId());
+            for (ConsultationEntity consultation : consultations) {
+                if (consultation.getStatus() == "confirmed"){
+                    notificationService.sendReminder(consultation);
+                    consultation.setReminderSent(true);
+                }
+            }
         }
     }
 }

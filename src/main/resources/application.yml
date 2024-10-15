@@ -5,6 +5,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/consul_plan
     username: postgres
     password: postgres
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
   jpa:
     show-sql: true
     hibernate:
