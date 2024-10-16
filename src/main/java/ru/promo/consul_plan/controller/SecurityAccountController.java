@@ -1,5 +1,6 @@
 package ru.promo.consul_plan.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ public class SecurityAccountController {
 
     private final AuthenticationService authenticationService;
 
-    //Регистрация пользователя
+    @Operation(summary = "Имя пользователя это ПОЧТА")
     @PostMapping("/auth/sign-up")
     public TokenResponse signUp(@RequestBody SignUpRequest request) {
         return authenticationService.signUp(request);
