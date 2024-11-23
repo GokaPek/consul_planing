@@ -26,7 +26,12 @@ spring:
           auth: true
           starttls:
             enable: true
-
+logging:
+  file:
+    name: logs/app.log
+  level:
+    org.springframework.web: DEBUG
+    ru.promo.consul_plan: DEBUG
 token:
   signing:
     key: "PromoIt"

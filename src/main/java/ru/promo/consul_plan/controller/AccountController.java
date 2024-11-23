@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class AccountController {
+public class AccountController implements AccountApi {
 
     @Autowired
     private SpecialistService specialistService;
@@ -32,19 +32,15 @@ public class AccountController {
     //    }
 
     //Только админу
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
     public String getInfoForAdmin(@AuthenticationPrincipal UserDetails user) {
         return user.getUsername();
     }
 
-    @GetMapping("/admin/specialists")
     public ResponseEntity<List<SpecialistEntity>> getAllSpecialists() {
         List<SpecialistEntity> specialists = specialistService.getAll();
         return ResponseEntity.ok(specialists);
     }
 
-    @GetMapping("/admin/clients")
     public ResponseEntity<List<ClientEntity>> getAllClients() {
         List<ClientEntity> clients = clientService.getAll();
         return ResponseEntity.ok(clients);
