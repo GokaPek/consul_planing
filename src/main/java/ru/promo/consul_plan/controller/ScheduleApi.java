@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.dto.ScheduleDTO;
-import ru.promo.consul_plan.dto.SpecialistDTO;
-import ru.promo.consul_plan.entity.ScheduleEntity;
+import ru.promo.consul_plan.domain.Schedule;
+import ru.promo.consul_plan.domain.Specialist;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import java.util.List;
 
 @Tag(name = "Schedule API", description = "API для управления расписаниями")
@@ -16,7 +16,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Создать расписание")
     @PostMapping
-    ResponseEntity<Void> createSchedule(@RequestBody ScheduleDTO scheduleDTO);
+    ResponseEntity<Void> createSchedule(@RequestBody Schedule schedule);
 
     @Operation(summary = "Получить расписание по ID")
     @GetMapping("/{id}")
@@ -24,7 +24,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Обновить расписание")
     @PutMapping
-    ResponseEntity<Void> updateSchedule(@RequestBody ScheduleDTO scheduleDTO);
+    ResponseEntity<Void> updateSchedule(@RequestBody Schedule schedule);
 
     @Operation(summary = "Удалить расписание")
     @DeleteMapping("/{id}")
@@ -36,7 +36,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Получить всех специалистов")
     @GetMapping("/specialists")
-    ResponseEntity<List<SpecialistDTO>> getAllSpecialists();
+    ResponseEntity<List<Specialist>> getAllSpecialists();
 
     @Operation(summary = "Получить все расписания")
     @GetMapping

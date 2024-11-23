@@ -8,9 +8,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.promo.consul_plan.dto.ScheduleDTO;
-import ru.promo.consul_plan.entity.ScheduleEntity;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.Schedule;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
+import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.repository.ScheduleRepository;
 import ru.promo.consul_plan.repository.SpecialistRepository;
 import ru.promo.consul_plan.service.ScheduleService;
@@ -37,7 +37,7 @@ public class ScheduleServiceTest {
     @InjectMocks
     private ScheduleService scheduleService;
 
-    private ScheduleDTO scheduleDTO;
+    private Schedule schedule;
     private SpecialistEntity specialistEntity;
     private ScheduleEntity scheduleEntity;
 
@@ -47,18 +47,18 @@ public class ScheduleServiceTest {
         specialistEntity = new SpecialistEntity();
         specialistEntity.setId(specialistId);
 
-        scheduleDTO = new ScheduleDTO();
-        scheduleDTO.setSpecialistId(specialistId);
-        scheduleDTO.setDate(LocalDate.of(2024, 10, 13));
-        scheduleDTO.setStartTime(String.valueOf(LocalTime.of(9, 0)));
-        scheduleDTO.setEndTime(String.valueOf(LocalTime.of(10, 0)));
+        schedule = new Schedule();
+        schedule.setSpecialistId(specialistId);
+        schedule.setDate(LocalDate.of(2024, 10, 13));
+        schedule.setStartTime(String.valueOf(LocalTime.of(9, 0)));
+        schedule.setEndTime(String.valueOf(LocalTime.of(10, 0)));
 
         scheduleEntity = new ScheduleEntity();
         scheduleEntity.setId(1L);
         scheduleEntity.setSpecialist(specialistEntity);
-        scheduleEntity.setDate(scheduleDTO.getDate());
-        scheduleEntity.setStartTime(LocalTime.parse(scheduleDTO.getStartTime()));
-        scheduleEntity.setEndTime(LocalTime.parse(scheduleDTO.getEndTime()));
+        scheduleEntity.setDate(schedule.getDate());
+        scheduleEntity.setStartTime(LocalTime.parse(schedule.getStartTime()));
+        scheduleEntity.setEndTime(LocalTime.parse(schedule.getEndTime()));
     }
 
     @Test
@@ -66,9 +66,9 @@ public class ScheduleServiceTest {
         when(specialistRepository.findById(1L)).thenReturn(Optional.of(specialistEntity));
         when(scheduleRepository.save(any(ScheduleEntity.class))).thenReturn(scheduleEntity);
 
-        scheduleService.create(scheduleDTO);
+        scheduleService.create(schedule);
 
-        verify(specialistRepository, times(1)).findById(scheduleDTO.getSpecialistId());
+        verify(specialistRepository, times(1)).findById(schedule.getSpecialistId());
         verify(scheduleRepository, times(1)).save(any(ScheduleEntity.class));
     }
 
@@ -92,11 +92,11 @@ public class ScheduleServiceTest {
         when(specialistRepository.findById(1L)).thenReturn(Optional.of(specialistEntity));
         when(scheduleRepository.save(any(ScheduleEntity.class))).thenReturn(scheduleEntity);
 
-        scheduleDTO.setId(1L);
-        scheduleService.update(scheduleDTO);
+        schedule.setId(1L);
+        scheduleService.update(schedule);
 
-        verify(scheduleRepository, times(1)).existsById(scheduleDTO.getId());
-        verify(specialistRepository, times(1)).findById(scheduleDTO.getSpecialistId());
+        verify(scheduleRepository, times(1)).existsById(schedule.getId());
+        verify(specialistRepository, times(1)).findById(schedule.getSpecialistId());
         verify(scheduleRepository, times(1)).save(any(ScheduleEntity.class));
     }
 

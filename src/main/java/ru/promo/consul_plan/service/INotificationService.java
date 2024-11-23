@@ -1,8 +1,7 @@
 package ru.promo.consul_plan.service;
 
-import ru.promo.consul_plan.dto.NotificationDTO;
-import ru.promo.consul_plan.entity.ConsultationEntity;
-import ru.promo.consul_plan.entity.NotificationEntity;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.NotificationEntity;
 
 import java.util.List;
 

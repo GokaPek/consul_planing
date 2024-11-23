@@ -1,8 +1,8 @@
 package ru.promo.consul_plan.service;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
-import ru.promo.consul_plan.dto.SpecialistDTO;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.Specialist;
+import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface ISpecialistService {
     void delete(Long id);
     List<SpecialistEntity> getAll();
 
-    List<SpecialistDTO> getAllSpecialistsDTO();
+    List<Specialist> getAllSpecialistsDTO();
 
-    SpecialistDTO convertToDTO(SpecialistEntity specialist);
+    Specialist convertToDTO(SpecialistEntity specialist);
 }

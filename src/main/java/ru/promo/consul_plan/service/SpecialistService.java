@@ -4,8 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.dto.SpecialistDTO;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.Specialist;
+import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.repository.SpecialistRepository;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class SpecialistService implements ISpecialistService{
     }
 
     @Override
-    public List<SpecialistDTO> getAllSpecialistsDTO() {
+    public List<Specialist> getAllSpecialistsDTO() {
         List<SpecialistEntity> specialists = specialistRepository.findAll();
         return specialists.stream()
                 .map(this::convertToDTO)
@@ -62,8 +62,8 @@ public class SpecialistService implements ISpecialistService{
     }
 
     @Override
-    public SpecialistDTO convertToDTO(SpecialistEntity specialist) {
-         return new SpecialistDTO(
+    public Specialist convertToDTO(SpecialistEntity specialist) {
+         return new Specialist(
                 specialist.getId(),
                 specialist.getAccount().getUsername(),
                 specialist.getSpecialization()

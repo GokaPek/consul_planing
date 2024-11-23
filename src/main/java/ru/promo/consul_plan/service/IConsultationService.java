@@ -1,7 +1,7 @@
 package ru.promo.consul_plan.service;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
-import ru.promo.consul_plan.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
 import java.util.List;
 

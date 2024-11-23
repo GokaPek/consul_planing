@@ -8,8 +8,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.promo.consul_plan.entity.ClientEntity;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.entity.ClientEntity;
+import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 
 import java.util.List;
 

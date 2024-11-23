@@ -3,13 +3,11 @@ package ru.promo.consul_plan.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.promo.consul_plan.entity.ClientEntity;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.entity.ClientEntity;
+import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.service.ClientService;
 import ru.promo.consul_plan.service.SpecialistService;
 

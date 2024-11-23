@@ -4,15 +4,14 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.dto.NotificationDTO;
-import ru.promo.consul_plan.entity.ConsultationEntity;
-import ru.promo.consul_plan.entity.NotificationEntity;
-import ru.promo.consul_plan.entity.TypeStatus;
+import ru.promo.consul_plan.domain.Notification;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.NotificationEntity;
+import ru.promo.consul_plan.domain.entity.TypeStatus;
 import ru.promo.consul_plan.repository.NotificationRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,11 +96,11 @@ public class NotificationService implements INotificationService {
         }
     }
 
-    private NotificationDTO convertToDTO(NotificationEntity entity) {
+    private Notification convertToDTO(NotificationEntity entity) {
         if (entity == null) {
             return null;
         }
-        NotificationDTO dto = new NotificationDTO();
+        Notification dto = new Notification();
         dto.setId(entity.getId());
         dto.setConsultationId(entity.getConsultation().getId());
         dto.setType(entity.getType().name());

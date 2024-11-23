@@ -1,6 +1,6 @@
 package ru.promo.consul_plan.repository;
 
-import ru.promo.consul_plan.entity.ScheduleEntity;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

@@ -1,15 +1,12 @@
 package ru.promo.consul_plan.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.dto.ScheduleDTO;
-import ru.promo.consul_plan.dto.SpecialistDTO;
-import ru.promo.consul_plan.entity.ScheduleEntity;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.Schedule;
+import ru.promo.consul_plan.domain.Specialist;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.service.ScheduleService;
 import ru.promo.consul_plan.service.SpecialistService;
 
@@ -25,8 +22,8 @@ public class ScheduleController implements ScheduleApi{
     private SpecialistService specialistService;
 
     @PostMapping
-    public ResponseEntity<Void> createSchedule( @Valid @RequestBody ScheduleDTO scheduleDTO) {
-        scheduleService.create(scheduleDTO);
+    public ResponseEntity<Void> createSchedule( @Valid @RequestBody Schedule schedule) {
+        scheduleService.create(schedule);
         return ResponseEntity.ok().build();
     }
 
@@ -35,8 +32,8 @@ public class ScheduleController implements ScheduleApi{
         return ResponseEntity.ok(schedule);
     }
 
-    public ResponseEntity<Void> updateSchedule(@Valid @RequestBody ScheduleDTO scheduleDTO) {
-        scheduleService.update(scheduleDTO);
+    public ResponseEntity<Void> updateSchedule(@Valid @RequestBody Schedule schedule) {
+        scheduleService.update(schedule);
         return ResponseEntity.ok().build();
     }
 
@@ -50,8 +47,8 @@ public class ScheduleController implements ScheduleApi{
         return ResponseEntity.ok(schedules);
     }
 
-    public ResponseEntity<List<SpecialistDTO>> getAllSpecialists() {
-        List<SpecialistDTO> specialists = specialistService.getAllSpecialistsDTO();
+    public ResponseEntity<List<Specialist>> getAllSpecialists() {
+        List<Specialist> specialists = specialistService.getAllSpecialistsDTO();
         return ResponseEntity.ok(specialists);
     }
 

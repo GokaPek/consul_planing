@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
 import java.util.List;
 

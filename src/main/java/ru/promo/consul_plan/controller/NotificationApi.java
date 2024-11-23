@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.entity.NotificationEntity;
+import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import java.util.List;
 
 @Tag(name = "Notification API", description = "API для управления уведомлениями")

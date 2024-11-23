@@ -1,4 +1,5 @@
-package ru.promo.consul_plan.entity;
+package ru.promo.consul_plan.domain.entity;
+
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,13 +7,15 @@ import ru.promo.consul_plan.domain.entity.Account;
 
 @Data
 @Entity
-@Table(name = "client")
-public class ClientEntity {
+@Table(name = "specialist")
+public class SpecialistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JoinColumn(name = "account_id")
     private Account account;
+
+    private String specialization;
 }

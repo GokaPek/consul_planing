@@ -1,12 +1,10 @@
 package ru.promo.consul_plan.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.service.ConsultationService;
 
 import java.util.List;

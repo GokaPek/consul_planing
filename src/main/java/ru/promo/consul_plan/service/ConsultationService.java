@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.entity.ConsultationEntity;
-import ru.promo.consul_plan.entity.NotificationEntity;
-import ru.promo.consul_plan.entity.ScheduleEntity;
-import ru.promo.consul_plan.entity.TypeStatus;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.NotificationEntity;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
+import ru.promo.consul_plan.domain.entity.TypeStatus;
 import ru.promo.consul_plan.repository.ConsultationRepository;
 
 import java.time.LocalDateTime;

@@ -4,8 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.dto.NotificationDTO;
-import ru.promo.consul_plan.entity.NotificationEntity;
+import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import ru.promo.consul_plan.service.ConsultationService;
 import ru.promo.consul_plan.service.NotificationService;
 

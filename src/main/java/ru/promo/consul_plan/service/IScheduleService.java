@@ -1,17 +1,15 @@
 package ru.promo.consul_plan.service;
 
-import ru.promo.consul_plan.dto.ScheduleDTO;
-import ru.promo.consul_plan.entity.ConsultationEntity;
-import ru.promo.consul_plan.entity.ScheduleEntity;
+import ru.promo.consul_plan.domain.Schedule;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IScheduleService {
-    void create(ScheduleDTO dto);
+    void create(Schedule dto);
     ScheduleEntity getById(Long id);
-    void update(ScheduleDTO dto);
+    void update(Schedule dto);
 
     void update(ScheduleEntity entity);
 

@@ -2,9 +2,9 @@ package ru.promo.consul_plan.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.dto.ScheduleDTO;
-import ru.promo.consul_plan.entity.ScheduleEntity;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.Schedule;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
+import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.repository.ScheduleRepository;
 import ru.promo.consul_plan.repository.SpecialistRepository;
 
@@ -20,7 +20,7 @@ public class ScheduleService implements IScheduleService {
     private final SpecialistRepository specialistRepository;
 
     @Override
-    public void create(ScheduleDTO dto) {
+    public void create(Schedule dto) {
         SpecialistEntity specialist = specialistRepository.findById(dto.getSpecialistId())
                 .orElseThrow(() -> new IllegalArgumentException("Specialist not found"));
 
@@ -39,7 +39,7 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public void update(ScheduleDTO dto) {
+    public void update(Schedule dto) {
         if (scheduleRepository.existsById(dto.getId())) {
             SpecialistEntity specialist = specialistRepository.findById(dto.getSpecialistId())
                     .orElseThrow(() -> new IllegalArgumentException("Specialist not found"));
