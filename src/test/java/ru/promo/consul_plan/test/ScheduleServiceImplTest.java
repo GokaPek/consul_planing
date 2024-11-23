@@ -13,7 +13,7 @@ import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.repository.ScheduleRepository;
 import ru.promo.consul_plan.repository.SpecialistRepository;
-import ru.promo.consul_plan.service.ScheduleService;
+import ru.promo.consul_plan.service.ScheduleServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = WavefrontProperties.Application.class) // Укажите ваш класс конфигурации Spring Boot
 @ExtendWith(MockitoExtension.class)
-public class ScheduleServiceTest {
+public class ScheduleServiceImplTest {
 
     @Mock
     private ScheduleRepository scheduleRepository;
@@ -35,7 +35,7 @@ public class ScheduleServiceTest {
     private SpecialistRepository specialistRepository;
 
     @InjectMocks
-    private ScheduleService scheduleService;
+    private ScheduleServiceImpl scheduleServiceImpl;
 
     private Schedule schedule;
     private SpecialistEntity specialistEntity;
@@ -66,7 +66,7 @@ public class ScheduleServiceTest {
         when(specialistRepository.findById(1L)).thenReturn(Optional.of(specialistEntity));
         when(scheduleRepository.save(any(ScheduleEntity.class))).thenReturn(scheduleEntity);
 
-        scheduleService.create(schedule);
+        scheduleServiceImpl.create(schedule);
 
         verify(specialistRepository, times(1)).findById(schedule.getSpecialistId());
         verify(scheduleRepository, times(1)).save(any(ScheduleEntity.class));
@@ -76,7 +76,7 @@ public class ScheduleServiceTest {
     public void testGetById() {
         when(scheduleRepository.findById(1L)).thenReturn(Optional.of(scheduleEntity));
 
-        ScheduleEntity result = scheduleService.getById(1L);
+        ScheduleEntity result = scheduleServiceImpl.getById(1L);
 
         assertNotNull(result, "ScheduleEntity should not be null");
         assertEquals(scheduleEntity.getId(), result.getId());
@@ -93,7 +93,7 @@ public class ScheduleServiceTest {
         when(scheduleRepository.save(any(ScheduleEntity.class))).thenReturn(scheduleEntity);
 
         schedule.setId(1L);
-        scheduleService.update(schedule);
+        scheduleServiceImpl.update(schedule);
 
         verify(scheduleRepository, times(1)).existsById(schedule.getId());
         verify(specialistRepository, times(1)).findById(schedule.getSpecialistId());
@@ -104,7 +104,7 @@ public class ScheduleServiceTest {
     public void testDeleteSchedule() {
         doNothing().when(scheduleRepository).deleteById(1L);
 
-        scheduleService.delete(1L);
+        scheduleServiceImpl.delete(1L);
 
         verify(scheduleRepository, times(1)).deleteById(1L);
     }
@@ -113,7 +113,7 @@ public class ScheduleServiceTest {
     public void testGetAllBySpecialistId() {
         when(scheduleRepository.findAllBySpecialistId(1L)).thenReturn(List.of(scheduleEntity));
 
-        List<ScheduleEntity> result = scheduleService.getAllBySpecialistId(1L);
+        List<ScheduleEntity> result = scheduleServiceImpl.getAllBySpecialistId(1L);
 
         assertNotNull(result);
         assertEquals(1, result.size());

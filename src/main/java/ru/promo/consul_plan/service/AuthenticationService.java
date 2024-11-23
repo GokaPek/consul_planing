@@ -19,8 +19,8 @@ import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 public class AuthenticationService {
 
     private final AccountService accountService;
-    private final SpecialistService specialistService;
-    private final ClientService clientService;
+    private final SpecialistServiceImpl specialistServiceImpl;
+    private final ClientServiceImpl clientServiceImpl;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -41,11 +41,11 @@ public class AuthenticationService {
             var specialist = new SpecialistEntity();
             specialist.setAccount(user);
             specialist.setSpecialization(request.getSpecialization());
-            specialistService.create(specialist);
+            specialistServiceImpl.create(specialist);
         } else {
             var client = new ClientEntity();
             client.setAccount(user);
-            clientService.create(client);
+            clientServiceImpl.create(client);
         }
 
 

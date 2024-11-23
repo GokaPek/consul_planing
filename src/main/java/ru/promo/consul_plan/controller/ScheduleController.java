@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.Specialist;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
-import ru.promo.consul_plan.service.ScheduleService;
-import ru.promo.consul_plan.service.SpecialistService;
+import ru.promo.consul_plan.service.ScheduleServiceImpl;
+import ru.promo.consul_plan.service.SpecialistServiceImpl;
 
 import java.util.List;
 
@@ -16,44 +16,44 @@ import java.util.List;
 public class ScheduleController implements ScheduleApi{
 
     @Autowired
-    private ScheduleService scheduleService;
+    private ScheduleServiceImpl scheduleServiceImpl;
 
     @Autowired
-    private SpecialistService specialistService;
+    private SpecialistServiceImpl specialistServiceImpl;
 
     @PostMapping
     public ResponseEntity<Void> createSchedule( @Valid @RequestBody Schedule schedule) {
-        scheduleService.create(schedule);
+        scheduleServiceImpl.create(schedule);
         return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<ScheduleEntity> getScheduleById(@PathVariable(name = "id") Long id) {
-        ScheduleEntity schedule = scheduleService.getById(id);
+        ScheduleEntity schedule = scheduleServiceImpl.getById(id);
         return ResponseEntity.ok(schedule);
     }
 
     public ResponseEntity<Void> updateSchedule(@Valid @RequestBody Schedule schedule) {
-        scheduleService.update(schedule);
+        scheduleServiceImpl.update(schedule);
         return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<Void> deleteSchedule(@PathVariable(name = "id") Long id) {
-        scheduleService.delete(id);
+        scheduleServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     public ResponseEntity<List<ScheduleEntity>> getSchedulesBySpecialistId(@PathVariable(name = "specialistId") Long specialistId) {
-        List<ScheduleEntity> schedules = scheduleService.getAllBySpecialistId(specialistId);
+        List<ScheduleEntity> schedules = scheduleServiceImpl.getAllBySpecialistId(specialistId);
         return ResponseEntity.ok(schedules);
     }
 
     public ResponseEntity<List<Specialist>> getAllSpecialists() {
-        List<Specialist> specialists = specialistService.getAllSpecialistsDTO();
+        List<Specialist> specialists = specialistServiceImpl.getAllSpecialistsDTO();
         return ResponseEntity.ok(specialists);
     }
 
     public ResponseEntity<List<ScheduleEntity>> getAllSchedule() {
-        List<ScheduleEntity> schedules = scheduleService.getAll();
+        List<ScheduleEntity> schedules = scheduleServiceImpl.getAll();
         return ResponseEntity.ok(schedules);
     }
 
