@@ -2,6 +2,7 @@ package ru.promo.consul_plan.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Создать расписание")
     @PostMapping
-    ResponseEntity<Void> createSchedule(@RequestBody Schedule schedule);
+    ResponseEntity<Void> createSchedule(@RequestBody(description = "Параметры для создания расписания", required = true) Schedule schedule);
 
     @Operation(summary = "Получить расписание по ID")
     @GetMapping("/{id}")
@@ -24,7 +25,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Обновить расписание")
     @PutMapping
-    ResponseEntity<Void> updateSchedule(@RequestBody Schedule schedule);
+    ResponseEntity<Void> updateSchedule(@RequestBody(description = "Параметры для обновления расписания", required = true) Schedule schedule);
 
     @Operation(summary = "Удалить расписание")
     @DeleteMapping("/{id}")

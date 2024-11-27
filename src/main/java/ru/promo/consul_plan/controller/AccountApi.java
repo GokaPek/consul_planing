@@ -24,9 +24,11 @@ public interface AccountApi {
 
     @Operation(summary = "Получить всех специалистов (только для админа)")
     @GetMapping("/admin/specialists")
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<List<SpecialistEntity>> getAllSpecialists();
 
     @Operation(summary = "Получить всех клиентов (только для админа)")
     @GetMapping("/admin/clients")
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<List<ClientEntity>> getAllClients();
 }

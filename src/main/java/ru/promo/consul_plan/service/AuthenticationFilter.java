@@ -21,8 +21,8 @@ import java.io.IOException;
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     public static final String BEARER_PREFIX = "Bearer ";
-    private final JwtService jwtService;
-    private final AccountService accountService;
+    private final JwtServiceImpl jwtServiceImpl;
+    private final AccountServiceImpl accountServiceImpl;
 
     @Override
     protected void doFilterInternal(
@@ -41,14 +41,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         //
 
-        var username = jwtService.extractUserName(jwt);
+        var username = jwtServiceImpl.extractUserName(jwt);
 
         if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = accountService
+            UserDetails userDetails = accountServiceImpl
                     .userDetailsService()
                     .loadUserByUsername(username);
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtServiceImpl.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

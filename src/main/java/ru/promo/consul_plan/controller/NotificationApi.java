@@ -2,6 +2,7 @@ package ru.promo.consul_plan.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public interface NotificationApi {
 
     @Operation(summary = "Создать уведомление")
     @PostMapping
-    ResponseEntity<NotificationEntity> createNotification(@RequestBody NotificationEntity notification);
+    ResponseEntity<NotificationEntity> createNotification(@RequestBody(description = "Параметры для создания уведомления", required = true) NotificationEntity notification);
 
     @Operation(summary = "Получить уведомление по ID")
     @GetMapping("/{id}")
@@ -22,7 +23,7 @@ public interface NotificationApi {
 
     @Operation(summary = "Обновить уведомление")
     @PutMapping
-    ResponseEntity<NotificationEntity> updateNotification(@RequestBody NotificationEntity notification);
+    ResponseEntity<NotificationEntity> updateNotification(@RequestBody(description = "Параметры для изменения уведомления", required = true) NotificationEntity notification);
 
     @Operation(summary = "Удалить уведомление")
     @DeleteMapping("/{id}")

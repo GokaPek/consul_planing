@@ -18,9 +18,9 @@ import java.util.List;
 public class ConsultationServiceImpl implements ConsultationService {
 
     private final ConsultationRepository consultationRepository;
-    private final NotificationServiceImpl notificationServiceImpl;
-    private final ScheduleServiceImpl scheduleServiceImpl;
-    private final ClientServiceImpl clientServiceImpl;
+    private final NotificationService notificationService;
+    private final ScheduleService scheduleService;
+    private final ClientService clientService;
 
     @Override
     public void create(ConsultationEntity entity) {
@@ -35,8 +35,8 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     public ConsultationEntity reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
 
-        var schedule = scheduleServiceImpl.getById(scheduleId);
-        var client = clientServiceImpl.getById(clientId);
+        var schedule = scheduleService.getById(scheduleId);
+        var client = clientService.getById(clientId);
 
         ConsultationEntity consultation = new ConsultationEntity();
 
@@ -53,11 +53,11 @@ public class ConsultationServiceImpl implements ConsultationService {
         notification.setType(TypeStatus.RESERVED);
         notification.setSentDateTime(LocalDateTime.now());
         notification.setStatus("sent");
-        notificationServiceImpl.create(notification);
+        notificationService.create(notification);
 
         schedule.setClient(client);
 
-        scheduleServiceImpl.update(schedule);
+        scheduleService.update(schedule);
 
         return reservedConsultation;
     }
@@ -86,8 +86,8 @@ public class ConsultationServiceImpl implements ConsultationService {
             notification.setType(TypeStatus.CONFORMED);
             notification.setSentDateTime(LocalDateTime.now());
             notification.setStatus("sent");
-            notificationServiceImpl.create(notification);
-            notificationServiceImpl.sendReminder(consultation);
+            notificationService.create(notification);
+            notificationService.sendReminder(consultation);
 
             return confirmedConsultation;
         }
@@ -107,12 +107,12 @@ public class ConsultationServiceImpl implements ConsultationService {
             notification.setType(TypeStatus.CANCELLED);
             notification.setSentDateTime(LocalDateTime.now());
             notification.setStatus("sent");
-            notificationServiceImpl.create(notification);
+            notificationService.create(notification);
 
             ScheduleEntity schedule = consultation.getSchedule();
             schedule.setClient(null);
 
-            scheduleServiceImpl.update(schedule);
+            scheduleService.update(schedule);
 
             return cancelledConsultation;
         }
@@ -125,13 +125,13 @@ public class ConsultationServiceImpl implements ConsultationService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime tomorrow = now.plusDays(1);
 
-        List<ScheduleEntity> entities = scheduleServiceImpl.findAllByDateTimeBetween(tomorrow.toLocalDate());
+        List<ScheduleEntity> entities = scheduleService.findAllByDateTimeBetween(tomorrow.toLocalDate());
 
         for (ScheduleEntity entity : entities){
             var consultations = consultationRepository.findByClientId(entity.getClient().getId());
             for (ConsultationEntity consultation : consultations) {
                 if (consultation.getStatus() == TypeStatus.CONFORMED){
-                    notificationServiceImpl.sendReminder(consultation);
+                    notificationService.sendReminder(consultation);
                     consultation.setReminderSent(true);
                 }
             }

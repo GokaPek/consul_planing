@@ -1,42 +1,49 @@
 package ru.promo.consul_plan.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
-import ru.promo.consul_plan.service.ConsultationServiceImpl;
+import ru.promo.consul_plan.service.ConsultationService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 public class ConsultationController implements ConsultationApi {
 
-    @Autowired
-    private ConsultationServiceImpl consultationServiceImpl;
-
+    private final ConsultationService consultationService;
+    @Override
     public ResponseEntity<ConsultationEntity> reserveConsultation(@PathVariable(name = "clientId") Long clientId, @PathVariable(name = "scheduleId") Long scheduleId) throws ChangeSetPersister.NotFoundException {
-        ConsultationEntity reservedConsultation = consultationServiceImpl.reserveConsultation(scheduleId, clientId);
+        log.info("Reserve consultation for client {} and schedule {}", clientId, scheduleId);
+        ConsultationEntity reservedConsultation = consultationService.reserveConsultation(scheduleId, clientId);
         return ResponseEntity.ok(reservedConsultation);
     }
-
+    @Override
     public ResponseEntity<List<ConsultationEntity>> getClientConsultations(@PathVariable(name = "clientId") Long clientId) {
-        List<ConsultationEntity> clientConsultations = consultationServiceImpl.getClientConsultations(clientId);
+        log.debug("Get consultations for client {}", clientId);
+        List<ConsultationEntity> clientConsultations = consultationService.getClientConsultations(clientId);
         return ResponseEntity.ok(clientConsultations);
     }
-
+    @Override
     public ResponseEntity<List<ConsultationEntity>> getSpecialistConsultations(@PathVariable(name = "specialistId") Long specialistId) {
-        List<ConsultationEntity> specialistConsultations = consultationServiceImpl.getSpecialistConsultations(specialistId);
+        log.debug("Get consultations for specialist {}", specialistId);
+        List<ConsultationEntity> specialistConsultations = consultationService.getSpecialistConsultations(specialistId);
         return ResponseEntity.ok(specialistConsultations);
     }
-
+    @Override
     public ResponseEntity<ConsultationEntity> confirmConsultation(@PathVariable(name = "consultationId") Long consultationId) {
-        ConsultationEntity confirmedConsultation = consultationServiceImpl.confirmConsultation(consultationId);
+        log.info("Confirm consultation with ID {}", consultationId);
+        ConsultationEntity confirmedConsultation = consultationService.confirmConsultation(consultationId);
         return ResponseEntity.ok(confirmedConsultation);
     }
-
+    @Override
     public ResponseEntity<ConsultationEntity> cancelConsultation(@PathVariable(name = "consultationId") Long consultationId) {
-        ConsultationEntity cancelledConsultation = consultationServiceImpl.cancelConsultation(consultationId);
+        log.info("Cancel consultation with ID {}", consultationId);
+        ConsultationEntity cancelledConsultation = consultationService.cancelConsultation(consultationId);
         return ResponseEntity.ok(cancelledConsultation);
     }
 }

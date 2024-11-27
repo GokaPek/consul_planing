@@ -2,7 +2,6 @@ package ru.promo.consul_plan.service;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
@@ -18,7 +17,7 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
-    @Autowired
+
     private final EmailService emailService;
 
     @Override
