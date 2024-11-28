@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class SpecialistServiceImpl implements SpecialistService {
 
     private final SpecialistRepository specialistRepository;
+
     @Override
     @Transactional
     public void create(SpecialistEntity entity) {
@@ -63,7 +64,7 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Override
     public Specialist convertToDTO(SpecialistEntity specialist) {
-         return new Specialist(
+        return new Specialist(
                 specialist.getId(),
                 specialist.getAccount().getUsername(),
                 specialist.getSpecialization()

@@ -8,9 +8,13 @@ import java.util.List;
 
 public interface SpecialistService {
     void create(SpecialistEntity entity);
+
     SpecialistEntity getById(Long id) throws ChangeSetPersister.NotFoundException;
+
     void update(SpecialistEntity entity);
+
     void delete(Long id);
+
     List<SpecialistEntity> getAll();
 
     List<Specialist> getAllSpecialistsDTO();

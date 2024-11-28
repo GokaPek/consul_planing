@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface ClientService {
     void create(ClientEntity entity);
+
     ClientEntity getById(Long id) throws ChangeSetPersister.NotFoundException;
+
     void update(ClientEntity entity);
+
     void delete(Long id);
+
     List<ClientEntity> getAll();
 }

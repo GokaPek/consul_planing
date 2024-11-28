@@ -2,13 +2,14 @@ package ru.promo.consul_plan.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.Specialist;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
+
 import java.util.List;
 
 @Tag(name = "Schedule API", description = "API для управления расписаниями")
@@ -17,7 +18,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Создать расписание")
     @PostMapping
-    ResponseEntity<Void> createSchedule(@RequestBody(description = "Параметры для создания расписания", required = true) Schedule schedule);
+    ResponseEntity<Void> createSchedule(@Valid @Parameter(description = "Параметры для создания расписания") @RequestBody Schedule schedule);
 
     @Operation(summary = "Получить расписание по ID")
     @GetMapping("/{id}")
@@ -25,7 +26,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Обновить расписание")
     @PutMapping
-    ResponseEntity<Void> updateSchedule(@RequestBody(description = "Параметры для обновления расписания", required = true) Schedule schedule);
+    ResponseEntity<Void> updateSchedule(@Valid @Parameter(description = "Параметры для обновления расписания") @RequestBody Schedule schedule);
 
     @Operation(summary = "Удалить расписание")
     @DeleteMapping("/{id}")

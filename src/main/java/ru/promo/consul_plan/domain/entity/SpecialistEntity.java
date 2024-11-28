@@ -3,7 +3,6 @@ package ru.promo.consul_plan.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import ru.promo.consul_plan.domain.entity.Account;
 
 @Data
 @Entity

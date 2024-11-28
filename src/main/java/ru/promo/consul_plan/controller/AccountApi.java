@@ -16,7 +16,6 @@ import java.util.List;
 @Tag(name = "Account API", description = "API для управления учетными записями")
 @RequestMapping("/api/account")
 public interface AccountApi {
-
     @Operation(summary = "Получить информацию о пользователе (только для админа)")
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")

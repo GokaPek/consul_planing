@@ -127,10 +127,10 @@ public class ConsultationServiceImpl implements ConsultationService {
 
         List<ScheduleEntity> entities = scheduleService.findAllByDateTimeBetween(tomorrow.toLocalDate());
 
-        for (ScheduleEntity entity : entities){
+        for (ScheduleEntity entity : entities) {
             var consultations = consultationRepository.findByClientId(entity.getClient().getId());
             for (ConsultationEntity consultation : consultations) {
-                if (consultation.getStatus() == TypeStatus.CONFORMED){
+                if (consultation.getStatus() == TypeStatus.CONFORMED) {
                     notificationService.sendReminder(consultation);
                     consultation.setReminderSent(true);
                 }

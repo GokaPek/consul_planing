@@ -2,11 +2,12 @@ package ru.promo.consul_plan.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
+
 import java.util.List;
 
 @Tag(name = "Notification API", description = "API для управления уведомлениями")
@@ -15,7 +16,7 @@ public interface NotificationApi {
 
     @Operation(summary = "Создать уведомление")
     @PostMapping
-    ResponseEntity<NotificationEntity> createNotification(@RequestBody(description = "Параметры для создания уведомления", required = true) NotificationEntity notification);
+    ResponseEntity<NotificationEntity> createNotification(@Parameter(description = "Параметры для создания уведомления") @Valid @RequestBody NotificationEntity notification);
 
     @Operation(summary = "Получить уведомление по ID")
     @GetMapping("/{id}")
@@ -23,7 +24,7 @@ public interface NotificationApi {
 
     @Operation(summary = "Обновить уведомление")
     @PutMapping
-    ResponseEntity<NotificationEntity> updateNotification(@RequestBody(description = "Параметры для изменения уведомления", required = true) NotificationEntity notification);
+    ResponseEntity<NotificationEntity> updateNotification(@Parameter(description = "Параметры для изменения уведомления") @Valid @RequestBody NotificationEntity notification);
 
     @Operation(summary = "Удалить уведомление")
     @DeleteMapping("/{id}")

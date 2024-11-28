@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.promo.consul_plan.controller.domain.SignInRequest;
 import ru.promo.consul_plan.controller.domain.SignUpRequest;
 import ru.promo.consul_plan.controller.domain.TokenResponse;
@@ -15,7 +16,7 @@ import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AccountService accountService;
     private final SpecialistService specialistService;
@@ -24,6 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     @Override
     public TokenResponse signUp(SignUpRequest request) {
 
@@ -51,6 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         var jwt = jwtService.generateToken(user);
         return new TokenResponse(jwt);
     }
+
     @Override
     public TokenResponse signIn(SignInRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(

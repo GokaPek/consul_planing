@@ -22,16 +22,18 @@ public class AccountServiceImpl implements AccountService {
     public Account create(Account user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Пользователь с таким именем уже существует");
-            }
+        }
 
         return save(user);
     }
+
     @Override
     public Account getByUsername(String username) {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
     }
+
     @Override
     public UserDetailsService userDetailsService() {
         return this::getByUsername;

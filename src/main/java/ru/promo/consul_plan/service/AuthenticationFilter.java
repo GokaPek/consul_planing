@@ -1,19 +1,19 @@
 package ru.promo.consul_plan.service;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -21,8 +21,8 @@ import java.io.IOException;
 public class AuthenticationFilter extends OncePerRequestFilter {
 
     public static final String BEARER_PREFIX = "Bearer ";
-    private final JwtServiceImpl jwtServiceImpl;
-    private final AccountServiceImpl accountServiceImpl;
+    private final JwtService jwtService;
+    private final AccountService accountService;
 
     @Override
     protected void doFilterInternal(
@@ -41,14 +41,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         //
 
-        var username = jwtServiceImpl.extractUserName(jwt);
+        var username = jwtService.extractUserName(jwt);
 
         if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = accountServiceImpl
+            UserDetails userDetails = accountService
                     .userDetailsService()
                     .loadUserByUsername(username);
 
-            if (jwtServiceImpl.isTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
