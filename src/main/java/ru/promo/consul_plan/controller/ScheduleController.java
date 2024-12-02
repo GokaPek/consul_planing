@@ -1,72 +1,70 @@
 package ru.promo.consul_plan.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import jdk.jfr.Description;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.dto.ScheduleDTO;
-import ru.promo.consul_plan.dto.SpecialistDTO;
-import ru.promo.consul_plan.entity.ScheduleEntity;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import org.springframework.web.bind.annotation.RestController;
+import ru.promo.consul_plan.domain.Schedule;
+import ru.promo.consul_plan.domain.Specialist;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.service.ScheduleService;
 import ru.promo.consul_plan.service.SpecialistService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/schedules")
-public class ScheduleController {
+@RequiredArgsConstructor
+public class ScheduleController implements ScheduleApi {
 
-    @Autowired
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
+    private final SpecialistService specialistService;
 
-    @Autowired
-    private SpecialistService specialistService;
-
-    @Operation(summary = "Создание расписание для сотрудника (сотрудник создаёт расписание на каждый рабочий день индивидуально, расписание не повторяется")
-    @PostMapping
-    public ResponseEntity<Void> createSchedule( @Valid @RequestBody ScheduleDTO scheduleDTO) {
-        scheduleService.create(scheduleDTO);
+    @Override
+    public ResponseEntity<Void> createSchedule(Schedule schedule) {
+        log.info("Create schedule: {}", schedule);
+        scheduleService.create(schedule);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ScheduleEntity> getScheduleById(@PathVariable(name = "id") Long id) {
+    @Override
+    public ResponseEntity<ScheduleEntity> getScheduleById(Long id) {
+        log.debug("Get schedule by ID: {}", id);
         ScheduleEntity schedule = scheduleService.getById(id);
         return ResponseEntity.ok(schedule);
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateSchedule(@Valid @RequestBody ScheduleDTO scheduleDTO) {
-        scheduleService.update(scheduleDTO);
+    @Override
+    public ResponseEntity<Void> updateSchedule(Schedule schedule) {
+        log.info("Update schedule: {}", schedule);
+        scheduleService.update(schedule);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable(name = "id") Long id) {
+    @Override
+    public ResponseEntity<Void> deleteSchedule(Long id) {
+        log.info("Delete schedule by ID: {}", id);
         scheduleService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Вывод расписания специалиста !!Только свободные расписания, к которым не прикреплён клиент!!")
-    @GetMapping("/specialist/{specialistId}")
-    public ResponseEntity<List<ScheduleEntity>> getSchedulesBySpecialistId(@PathVariable(name = "specialistId") Long specialistId) {
+    @Override
+    public ResponseEntity<List<ScheduleEntity>> getSchedulesBySpecialistId(Long specialistId) {
+        log.debug("Get schedules by specialist ID: {}", specialistId);
         List<ScheduleEntity> schedules = scheduleService.getAllBySpecialistId(specialistId);
         return ResponseEntity.ok(schedules);
     }
 
-    @Operation(summary = "Вывод всех специалистов (предназначено для страницы специалистов, чтобы клиенты могли выбрать к кому хотят записаться")
-    @GetMapping("/specialists")
-    public ResponseEntity<List<SpecialistDTO>> getAllSpecialists() {
-        List<SpecialistDTO> specialists = specialistService.getAllSpecialistsDTO();
+    @Override
+    public ResponseEntity<List<Specialist>> getAllSpecialists() {
+        log.debug("Get all specialists");
+        List<Specialist> specialists = specialistService.getAllSpecialistsDTO();
         return ResponseEntity.ok(specialists);
     }
 
-    @Operation(summary = "Вывод всех расписаний, включая занятые")
-    @GetMapping()
+    @Override
     public ResponseEntity<List<ScheduleEntity>> getAllSchedule() {
+        log.debug("Get all schedules");
         List<ScheduleEntity> schedules = scheduleService.getAll();
         return ResponseEntity.ok(schedules);
     }

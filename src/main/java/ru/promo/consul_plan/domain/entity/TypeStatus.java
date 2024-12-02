@@ -1,4 +1,4 @@
-package ru.promo.consul_plan.entity;
+package ru.promo.consul_plan.domain.entity;
 
 public enum TypeStatus {
     RESERVED,

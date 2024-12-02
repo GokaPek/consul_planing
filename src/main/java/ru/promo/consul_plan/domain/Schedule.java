@@ -1,11 +1,11 @@
-package ru.promo.consul_plan.dto;
+package ru.promo.consul_plan.domain;
 
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class ScheduleDTO {
+public class Schedule {
     private Long id;
     private Long specialistId;
     private LocalDate date;

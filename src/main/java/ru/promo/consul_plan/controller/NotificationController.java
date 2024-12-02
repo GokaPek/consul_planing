@@ -1,64 +1,68 @@
 package ru.promo.consul_plan.controller;
 
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import ru.promo.consul_plan.dto.NotificationDTO;
-import ru.promo.consul_plan.entity.NotificationEntity;
+import org.springframework.web.bind.annotation.RestController;
+import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import ru.promo.consul_plan.service.ConsultationService;
 import ru.promo.consul_plan.service.NotificationService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/notifications")
-public class NotificationController {
+@RequiredArgsConstructor
+public class NotificationController implements NotificationApi {
 
-    @Autowired
-    private NotificationService notificationService;
-    @Autowired
-    private ConsultationService consultationService;
+    private final NotificationService notificationService;
+    private final ConsultationService consultationService;
 
-
-    @PostMapping
-    public ResponseEntity<NotificationEntity> createNotification(@Valid @RequestBody NotificationEntity notification) {
+    @Override
+    public ResponseEntity<NotificationEntity> createNotification(NotificationEntity notification) {
+        log.info("Create notification: {}", notification);
         notificationService.create(notification);
         return ResponseEntity.ok(notification);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<NotificationEntity> getNotificationById(@PathVariable(name = "id") Long id) {
+    @Override
+    public ResponseEntity<NotificationEntity> getNotificationById(Long id) {
+        log.debug("Get notification by ID: {}", id);
         NotificationEntity notification = notificationService.getById(id);
         return ResponseEntity.ok(notification);
     }
 
-    @PutMapping
-    public ResponseEntity<NotificationEntity> updateNotification(@Valid@RequestBody NotificationEntity notification) {
+    @Override
+    public ResponseEntity<NotificationEntity> updateNotification(NotificationEntity notification) {
+        log.info("Update notification: {}", notification);
         notificationService.update(notification);
         return ResponseEntity.ok(notification);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNotification(@PathVariable(name = "id") Long id) {
+    @Override
+    public ResponseEntity<Void> deleteNotification(Long id) {
+        log.info("Delete notification by ID: {}", id);
         notificationService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/consultation/{consultationId}")
-    public ResponseEntity<List<NotificationEntity>> getNotificationsByConsultationId(@PathVariable(name = "consultationId") Long consultationId) {
+    @Override
+    public ResponseEntity<List<NotificationEntity>> getNotificationsByConsultationId(Long consultationId) {
+        log.debug("Get notifications by consultation ID: {}", consultationId);
         List<NotificationEntity> notificationsEntity = notificationService.getAllByConsultationId(consultationId);
         return ResponseEntity.ok(notificationsEntity);
     }
 
-    @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<NotificationEntity>> getNotificationsByClientId(@PathVariable(name = "clientId") Long clientId) {
+    @Override
+    public ResponseEntity<List<NotificationEntity>> getNotificationsByClientId(Long clientId) {
+        log.debug("Get notifications by client ID: {}", clientId);
         List<NotificationEntity> notificationsEntity = notificationService.getAllByClientId(clientId);
         return ResponseEntity.ok(notificationsEntity);
     }
 
-    @PostMapping("/reminder/{consultationId}")
-    public ResponseEntity<Void> sendReminder(@PathVariable(name = "consultationId") Long consultationId) {
+    @Override
+    public ResponseEntity<Void> sendReminder(Long consultationId) {
+        log.info("Send reminder for consultation ID: {}", consultationId);
         var consultation = consultationService.getById(consultationId);
         notificationService.sendReminder(consultation);
         return ResponseEntity.noContent().build();

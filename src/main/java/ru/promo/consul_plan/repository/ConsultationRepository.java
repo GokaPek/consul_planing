@@ -3,9 +3,8 @@ package ru.promo.consul_plan.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.promo.consul_plan.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ConsultationRepository extends JpaRepository<ConsultationEntity, Long> {

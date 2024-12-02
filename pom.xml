@@ -24,6 +24,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>3.2.4</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -109,6 +110,13 @@
 			<version>3.1.5</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>9.22.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -127,13 +135,6 @@
 				<groupId>io.jsonwebtoken</groupId>
 				<artifactId>jjwt-jackson</artifactId>
 				<version>0.12.3</version>
-			</dependency>
-
-
-			<dependency>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-core</artifactId>
-				<version>4.6.2</version> <!-- Укажите актуальную версию -->
 			</dependency>
 		</dependencies>
 

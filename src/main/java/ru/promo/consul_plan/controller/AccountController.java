@@ -1,15 +1,12 @@
 package ru.promo.consul_plan.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.promo.consul_plan.entity.ClientEntity;
-import ru.promo.consul_plan.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.entity.ClientEntity;
+import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.service.ClientService;
 import ru.promo.consul_plan.service.SpecialistService;
 
@@ -17,13 +14,10 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class AccountController {
-
-    @Autowired
-    private SpecialistService specialistService;
-
-    @Autowired
-    private ClientService clientService;
+@Slf4j
+public class AccountController implements AccountApi {
+    private final SpecialistService specialistService;
+    private final ClientService clientService;
 
     //Под авторизацией всем
     //    @GetMapping("/all-auth")
@@ -32,20 +26,22 @@ public class AccountController {
     //    }
 
     //Только админу
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String getInfoForAdmin(@AuthenticationPrincipal UserDetails user) {
+    @Override
+    public String getInfoForAdmin(UserDetails user) {
+        log.debug("Request to get info for admin: {}", user.getUsername());
         return user.getUsername();
     }
 
-    @GetMapping("/admin/specialists")
+    @Override
     public ResponseEntity<List<SpecialistEntity>> getAllSpecialists() {
+        log.debug("Request to get all specialists");
         List<SpecialistEntity> specialists = specialistService.getAll();
         return ResponseEntity.ok(specialists);
     }
 
-    @GetMapping("/admin/clients")
+    @Override
     public ResponseEntity<List<ClientEntity>> getAllClients() {
+        log.debug("Request to get all clients");
         List<ClientEntity> clients = clientService.getAll();
         return ResponseEntity.ok(clients);
     }
