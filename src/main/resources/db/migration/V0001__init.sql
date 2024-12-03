@@ -1,6 +1,6 @@
 -- Создание таблицы account
 CREATE TABLE account (
-                         id UUID PRIMARY KEY,
+                         id UUID NOT NULL CONSTRAINT account_pk PRIMARY KEY,
                          username VARCHAR(255) UNIQUE NOT NULL,
                          password VARCHAR(255) NOT NULL,
                          role VARCHAR(50) NOT NULL
@@ -8,50 +8,53 @@ CREATE TABLE account (
 
 -- Создание таблицы client
 CREATE TABLE client (
-                        id BIGSERIAL PRIMARY KEY,
-                        account_id UUID,
-                        FOREIGN KEY (account_id) REFERENCES account(id)
+                        id BIGSERIAL NOT NULL CONSTRAINT client_pk PRIMARY KEY,
+                        account_id UUID NOT NULL
 );
 
 -- Создание таблицы specialist
 CREATE TABLE specialist (
-                            id BIGSERIAL PRIMARY KEY,
-                            account_id UUID,
-                            specialization VARCHAR(255),
-                            FOREIGN KEY (account_id) REFERENCES account(id)
+                            id BIGSERIAL NOT NULL CONSTRAINT specialist_pk PRIMARY KEY,
+                            account_id UUID NOT NULL,
+                            specialization VARCHAR(255) NOT NULL
 );
 
--- Создание таблицы schedule
+-- Создание таблицы schedule, client_id может быть null, поскольку расписание может быть свободным
 CREATE TABLE schedule (
-                          id BIGSERIAL PRIMARY KEY,
-                          specialist_id BIGINT,
+                          id BIGSERIAL NOT NULL CONSTRAINT schedule_pk PRIMARY KEY,
+                          specialist_id BIGINT NOT NULL,
                           client_id BIGINT,
-                          date DATE,
-                          start_time TIME,
-                          end_time TIME,
-                          FOREIGN KEY (specialist_id) REFERENCES specialist(id),
-                          FOREIGN KEY (client_id) REFERENCES client(id)
+                          date DATE NOT NULL,
+                          start_time TIME NOT NULL,
+                          end_time TIME NOT NULL
 );
 
 -- Создание таблицы consultation
 CREATE TABLE consultation (
-                              id BIGSERIAL PRIMARY KEY,
-                              specialist_id BIGINT,
-                              client_id BIGINT,
-                              schedule_id BIGINT,
-                              status VARCHAR(50),
-                              reminder_sent BOOLEAN,
-                              FOREIGN KEY (specialist_id) REFERENCES specialist(id),
-                              FOREIGN KEY (client_id) REFERENCES client(id),
-                              FOREIGN KEY (schedule_id) REFERENCES schedule(id)
+                              id BIGSERIAL NOT NULL CONSTRAINT consultation_pk PRIMARY KEY,
+                              specialist_id BIGINT NOT NULL,
+                              client_id BIGINT NOT NULL,
+                              schedule_id BIGINT NOT NULL,
+                              status VARCHAR(50) NOT NULL,
+                              reminder_sent BOOLEAN NOT NULL,
+                              CONSTRAINT unique_consultation UNIQUE (specialist_id, client_id, schedule_id)
 );
 
 -- Создание таблицы notification
 CREATE TABLE notification (
-                              id BIGSERIAL PRIMARY KEY,
+                              id BIGSERIAL NOT NULL CONSTRAINT notification_pk PRIMARY KEY,
                               consultation_id BIGINT,
-                              type VARCHAR(50),
-                              sent_date_time TIMESTAMP,
-                              status VARCHAR(50),
-                              FOREIGN KEY (consultation_id) REFERENCES consultation(id)
+                              type VARCHAR(50) NOT NULL,
+                              sent_date_time TIMESTAMP NOT NULL,
+                              status VARCHAR(50) NOT NULL
 );
+
+-- Добавление внешних ключей
+ALTER TABLE client ADD CONSTRAINT client_account_id_fk FOREIGN KEY (account_id) REFERENCES account (id);
+ALTER TABLE specialist ADD CONSTRAINT specialist_account_id_fk FOREIGN KEY (account_id) REFERENCES account (id);
+ALTER TABLE schedule ADD CONSTRAINT schedule_specialist_id_fk FOREIGN KEY (specialist_id) REFERENCES specialist (id);
+ALTER TABLE schedule ADD CONSTRAINT schedule_client_id_fk FOREIGN KEY (client_id) REFERENCES client (id);
+ALTER TABLE consultation ADD CONSTRAINT consultation_specialist_id_fk FOREIGN KEY (specialist_id) REFERENCES specialist (id);
+ALTER TABLE consultation ADD CONSTRAINT consultation_client_id_fk FOREIGN KEY (client_id) REFERENCES client (id);
+ALTER TABLE consultation ADD CONSTRAINT consultation_schedule_id_fk FOREIGN KEY (schedule_id) REFERENCES schedule (id);
+ALTER TABLE notification ADD CONSTRAINT notification_consultation_id_fk FOREIGN KEY (consultation_id) REFERENCES consultation (id);
