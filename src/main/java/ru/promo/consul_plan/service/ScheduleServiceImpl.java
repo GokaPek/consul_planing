@@ -9,7 +9,7 @@ import ru.promo.consul_plan.repository.ScheduleRepository;
 import ru.promo.consul_plan.repository.SpecialistRepository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,9 +26,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         ScheduleEntity entity = new ScheduleEntity();
         entity.setSpecialist(specialist);
-        entity.setDate(dto.getDate());
-        entity.setStartTime(LocalTime.parse(dto.getStartTime()));
-        entity.setEndTime(LocalTime.parse(dto.getEndTime()));
+        entity.setStartTime(LocalDateTime.parse(dto.getStartTime()));
+        entity.setEndTime(LocalDateTime.parse(dto.getEndTime()));
 
         scheduleRepository.save(entity);
     }
@@ -47,9 +46,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             ScheduleEntity entity = new ScheduleEntity();
             entity.setId(dto.getId());
             entity.setSpecialist(specialist);
-            entity.setDate(dto.getDate());
-            entity.setStartTime(LocalTime.parse(dto.getStartTime()));
-            entity.setEndTime(LocalTime.parse(dto.getEndTime()));
+            entity.setStartTime(LocalDateTime.parse(dto.getStartTime()));
+            entity.setEndTime(LocalDateTime.parse(dto.getEndTime()));
 
             scheduleRepository.save(entity);
         }
@@ -79,6 +77,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<ScheduleEntity> findAllByDateTimeBetween(LocalDate localDate) {
-        return scheduleRepository.findAllByDate(localDate);
+        return scheduleRepository.findAllByStartTime(localDate);
     }
 }

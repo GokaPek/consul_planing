@@ -24,9 +24,8 @@ CREATE TABLE schedule (
                           id BIGSERIAL NOT NULL CONSTRAINT schedule_pk PRIMARY KEY,
                           specialist_id BIGINT NOT NULL,
                           client_id BIGINT,
-                          date DATE NOT NULL,
-                          start_time TIME NOT NULL,
-                          end_time TIME NOT NULL
+                          start_time TIMESTAMP NOT NULL,
+                          end_time TIMESTAMP NOT NULL
 );
 
 -- Создание таблицы consultation

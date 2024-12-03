@@ -20,7 +20,7 @@ public interface NotificationApi {
 
     @Operation(summary = "Получить уведомление по ID")
     @GetMapping("/{id}")
-    ResponseEntity<NotificationEntity> getNotificationById(@Parameter(description = "ID уведомления") @PathVariable Long id);
+    ResponseEntity<NotificationEntity> getNotificationById(@Parameter(description = "ID уведомления") @PathVariable(name = "id") Long id);
 
     @Operation(summary = "Обновить уведомление")
     @PutMapping
@@ -28,17 +28,17 @@ public interface NotificationApi {
 
     @Operation(summary = "Удалить уведомление")
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteNotification(@Parameter(description = "ID уведомления") @PathVariable Long id);
+    ResponseEntity<Void> deleteNotification(@Parameter(description = "ID уведомления") @PathVariable(name = "id") Long id);
 
     @Operation(summary = "Получить все уведомления по ID консультации")
     @GetMapping("/consultation/{consultationId}")
-    ResponseEntity<List<NotificationEntity>> getNotificationsByConsultationId(@Parameter(description = "ID консультации") @PathVariable Long consultationId);
+    ResponseEntity<List<NotificationEntity>> getNotificationsByConsultationId(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 
     @Operation(summary = "Получить все уведомления по ID клиента")
     @GetMapping("/client/{clientId}")
-    ResponseEntity<List<NotificationEntity>> getNotificationsByClientId(@Parameter(description = "ID клиента") @PathVariable Long clientId);
+    ResponseEntity<List<NotificationEntity>> getNotificationsByClientId(@Parameter(description = "ID клиента") @PathVariable(name = "clientId") Long clientId);
 
     @Operation(summary = "Отправить напоминание по ID консультации")
     @PostMapping("/reminder/{consultationId}")
-    ResponseEntity<Void> sendReminder(@Parameter(description = "ID консультации") @PathVariable Long consultationId);
+    ResponseEntity<Void> sendReminder(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 }

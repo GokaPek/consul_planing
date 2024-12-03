@@ -11,5 +11,5 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
 
     List<ScheduleEntity> findAllBySpecialistIdAndClientIsNull(Long specialistId);
 
-    List<ScheduleEntity> findAllByDate(LocalDate date);
+    List<ScheduleEntity> findAllByStartTime(LocalDate date);
 }
