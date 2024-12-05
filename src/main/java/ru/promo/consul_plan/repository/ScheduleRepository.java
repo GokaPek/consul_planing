@@ -3,7 +3,7 @@ package ru.promo.consul_plan.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> {
@@ -11,5 +11,5 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
 
     List<ScheduleEntity> findAllBySpecialistIdAndClientIsNull(Long specialistId);
 
-    List<ScheduleEntity> findAllByStartTime(LocalDate date);
+    List<ScheduleEntity> findAllByStartTimeBetween(LocalDateTime start, LocalDateTime end);
 }

@@ -11,14 +11,20 @@ import java.time.LocalDateTime;
 public class NotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "consultation_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consultation_id", nullable = false)
     private ConsultationEntity consultation;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, length = 50)
     private TypeStatus type;
+
+    @Column(name = "sent_date_time", nullable = false)
     private LocalDateTime sentDateTime;
+
+    @Column(name = "status", nullable = false, length = 50)
     private String status;
 }

@@ -77,6 +77,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<ScheduleEntity> findAllByDateTimeBetween(LocalDate localDate) {
-        return scheduleRepository.findAllByStartTime(localDate);
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.atTime(23, 59, 59, 999_999_999); // Последняя наносекунда дня
+
+        return scheduleRepository.findAllByStartTimeBetween(startOfDay, endOfDay);
     }
 }
