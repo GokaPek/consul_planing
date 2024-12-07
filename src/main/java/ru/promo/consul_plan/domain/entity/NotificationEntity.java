@@ -25,6 +25,7 @@ public class NotificationEntity {
     @Column(name = "sent_date_time", nullable = false)
     private LocalDateTime sentDateTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
     private NotificationType status;
 }
