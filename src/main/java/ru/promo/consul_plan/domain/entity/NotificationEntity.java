@@ -15,7 +15,7 @@ public class NotificationEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "consultation_id", nullable = false)
+    @JoinColumn(name = "consultation_id")
     private ConsultationEntity consultation;
 
     @Enumerated(EnumType.STRING)
@@ -26,5 +26,5 @@ public class NotificationEntity {
     private LocalDateTime sentDateTime;
 
     @Column(name = "status", nullable = false, length = 50)
-    private String status;
+    private NotificationType status;
 }

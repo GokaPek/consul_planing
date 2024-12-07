@@ -58,4 +58,4 @@ ALTER TABLE consultation ADD CONSTRAINT consultation_schedule_id_fk FOREIGN KEY 
 ALTER TABLE notification ADD CONSTRAINT notification_consultation_id_fk FOREIGN KEY (consultation_id) REFERENCES consultation (id);
 
 -- Добавление ограничения UNIQUE для consultation
-ALTER TABLE consultation ADD CONSTRAINT unique_consultation UNIQUE (specialist_id, client_id, schedule_id);
+ALTER TABLE consultation ADD CONSTRAINT consultation_specialist_id_client_id_schedule_id_uk UNIQUE (specialist_id, client_id, schedule_id);

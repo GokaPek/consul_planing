@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.domain.entity.ConsultationEntity;
-import ru.promo.consul_plan.domain.entity.NotificationEntity;
-import ru.promo.consul_plan.domain.entity.ScheduleEntity;
-import ru.promo.consul_plan.domain.entity.TypeStatus;
+import ru.promo.consul_plan.domain.entity.*;
 import ru.promo.consul_plan.repository.ConsultationRepository;
 
 import java.time.LocalDateTime;
@@ -52,7 +49,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         notification.setConsultation(reservedConsultation);
         notification.setType(TypeStatus.RESERVED);
         notification.setSentDateTime(LocalDateTime.now());
-        notification.setStatus("sent");
+        notification.setStatus(NotificationType.sent);
         notificationService.create(notification);
 
         schedule.setClient(client);
@@ -85,7 +82,7 @@ public class ConsultationServiceImpl implements ConsultationService {
             notification.setConsultation(confirmedConsultation);
             notification.setType(TypeStatus.CONFORMED);
             notification.setSentDateTime(LocalDateTime.now());
-            notification.setStatus("sent");
+            notification.setStatus(NotificationType.sent);
             notificationService.create(notification);
             notificationService.sendReminder(consultation);
 
@@ -106,7 +103,7 @@ public class ConsultationServiceImpl implements ConsultationService {
             notification.setConsultation(cancelledConsultation);
             notification.setType(TypeStatus.CANCELLED);
             notification.setSentDateTime(LocalDateTime.now());
-            notification.setStatus("sent");
+            notification.setStatus(NotificationType.sent);
             notificationService.create(notification);
 
             ScheduleEntity schedule = consultation.getSchedule();

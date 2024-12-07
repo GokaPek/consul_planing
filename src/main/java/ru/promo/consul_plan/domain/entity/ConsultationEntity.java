@@ -29,5 +29,5 @@ public class ConsultationEntity {
     private TypeStatus status;
 
     @Column(name = "reminder_sent", nullable = false)
-    private boolean reminderSent;
+    private Boolean reminderSent;
 }

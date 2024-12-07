@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
+import ru.promo.consul_plan.domain.entity.NotificationType;
 import ru.promo.consul_plan.domain.entity.TypeStatus;
 import ru.promo.consul_plan.repository.NotificationRepository;
 
@@ -79,7 +80,7 @@ public class NotificationServiceImpl implements NotificationService {
         reminder.setId(consultation.getId());
         reminder.setType(TypeStatus.REMAINED);
         reminder.setSentDateTime(LocalDateTime.now());
-        reminder.setStatus("sent");
+        reminder.setStatus(NotificationType.sent);
         notificationRepository.save(reminder);
 
         String massage;
@@ -104,7 +105,7 @@ public class NotificationServiceImpl implements NotificationService {
         dto.setConsultationId(entity.getConsultation().getId());
         dto.setType(entity.getType().name());
         dto.setSentDateTime(entity.getSentDateTime());
-        dto.setStatus(entity.getStatus());
+        dto.setStatus(entity.getStatus().name());
         return dto;
     }
 }

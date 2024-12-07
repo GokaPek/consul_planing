@@ -10,6 +10,7 @@ import ru.promo.consul_plan.repository.SpecialistRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -78,7 +79,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleEntity> findAllByDateTimeBetween(LocalDate localDate) {
         LocalDateTime startOfDay = localDate.atStartOfDay();
-        LocalDateTime endOfDay = localDate.atTime(23, 59, 59, 999_999_999); // Последняя наносекунда дня
+        LocalDateTime endOfDay = localDate.atTime(LocalTime.MAX);
 
         return scheduleRepository.findAllByStartTimeBetween(startOfDay, endOfDay);
     }

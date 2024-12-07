@@ -20,7 +20,7 @@ public class ScheduleEntity {
     private SpecialistEntity specialist;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id", nullable = false)
+    @JoinColumn(name = "client_id")
     private ClientEntity client;
 
     @Column(name = "start_time", nullable = false)
