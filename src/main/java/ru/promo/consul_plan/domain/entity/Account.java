@@ -24,16 +24,17 @@ public class Account implements UserDetails {
 
     @Id
     @GeneratedValue
+    @Column(name = "id", unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, length = 50)
     private Role role;
 
     @Override

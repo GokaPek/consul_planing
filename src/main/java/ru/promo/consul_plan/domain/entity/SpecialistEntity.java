@@ -10,11 +10,13 @@ import lombok.Data;
 public class SpecialistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "account_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @Column(name = "specialization", nullable = false, length = 100)
     private String specialization;
 }
