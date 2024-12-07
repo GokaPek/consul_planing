@@ -3,7 +3,6 @@ package ru.promo.consul_plan.service;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationType;
@@ -45,29 +44,13 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationEntity> getAllByConsultationId(Long consultationId) {
-        // List<NotificationEntity> entities =
         return notificationRepository.findAllByConsultationId(consultationId);
-        // return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<NotificationEntity> getAllByClientId(Long clientId) {
-        // List<NotificationEntity> entities =
         return notificationRepository.findAllByConsultationClientId(clientId);
-        //return entities.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
-
-//    @Override
-//    public void sendReminder(Long consultationId) {
-//        // Логика отправки напоминания
-//        NotificationEntity reminder = new NotificationEntity();
-//        reminder.setConsultation(new ConsultationEntity());
-//        reminder.setId(consultationId);
-//        reminder.setType("reminder");
-//        reminder.setSentDateTime(LocalDateTime.now());
-//        reminder.setStatus("sent");
-//        notificationRepository.save(reminder);
-//    }
 
     @Override
     public void sendReminder(ConsultationEntity consultation) {
@@ -80,7 +63,7 @@ public class NotificationServiceImpl implements NotificationService {
         reminder.setId(consultation.getId());
         reminder.setType(TypeStatus.REMAINED);
         reminder.setSentDateTime(LocalDateTime.now());
-        reminder.setStatus(NotificationType.sent);
+        reminder.setStatus(NotificationType.SENT);
         notificationRepository.save(reminder);
 
         String massage;
@@ -94,18 +77,5 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-    }
-
-    private Notification convertToDTO(NotificationEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-        Notification dto = new Notification();
-        dto.setId(entity.getId());
-        dto.setConsultationId(entity.getConsultation().getId());
-        dto.setType(entity.getType().name());
-        dto.setSentDateTime(entity.getSentDateTime());
-        dto.setStatus(entity.getStatus().name());
-        return dto;
     }
 }

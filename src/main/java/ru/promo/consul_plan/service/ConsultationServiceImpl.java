@@ -49,7 +49,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         notification.setConsultation(reservedConsultation);
         notification.setType(TypeStatus.RESERVED);
         notification.setSentDateTime(LocalDateTime.now());
-        notification.setStatus(NotificationType.sent);
+        notification.setStatus(NotificationType.SENT);
         notificationService.create(notification);
 
         schedule.setClient(client);
@@ -82,7 +82,7 @@ public class ConsultationServiceImpl implements ConsultationService {
             notification.setConsultation(confirmedConsultation);
             notification.setType(TypeStatus.CONFORMED);
             notification.setSentDateTime(LocalDateTime.now());
-            notification.setStatus(NotificationType.sent);
+            notification.setStatus(NotificationType.SENT);
             notificationService.create(notification);
             notificationService.sendReminder(consultation);
 
@@ -103,7 +103,7 @@ public class ConsultationServiceImpl implements ConsultationService {
             notification.setConsultation(cancelledConsultation);
             notification.setType(TypeStatus.CANCELLED);
             notification.setSentDateTime(LocalDateTime.now());
-            notification.setStatus(NotificationType.sent);
+            notification.setStatus(NotificationType.SENT);
             notificationService.create(notification);
 
             ScheduleEntity schedule = consultation.getSchedule();
