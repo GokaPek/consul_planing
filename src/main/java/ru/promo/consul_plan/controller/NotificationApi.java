@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Notification;
-import ru.promo.consul_plan.domain.entity.NotificationEntity;
 
 import java.util.List;
 

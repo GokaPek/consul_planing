@@ -2,9 +2,13 @@ package ru.promo.consul_plan.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
 
+import java.util.List;
+
+@Component
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
     @Mapping(source = "consultation.id", target = "consultationId")
@@ -12,4 +16,7 @@ public interface NotificationMapper {
 
     @Mapping(source = "consultationId", target = "consultation.id")
     NotificationEntity toEntity(Notification notification);
+
+    @Mapping(source = "consultation.id", target = "consultationId")
+    List<Notification> toDTOList(List<NotificationEntity> entities);
 }

@@ -2,7 +2,6 @@ package ru.promo.consul_plan.service;
 
 import org.springframework.data.crossstore.ChangeSetPersister;
 import ru.promo.consul_plan.domain.Consultation;
-import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface ConsultationService {
 
     List<Consultation> getSpecialistConsultations(Long specialistId);
 
-    Consultation confirmConsultation(Long consultationId);
+    Consultation confirmConsultation(Long consultationId) throws ChangeSetPersister.NotFoundException;
 
     Consultation cancelConsultation(Long consultationId);
 }

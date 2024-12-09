@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.Specialist;
-import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 
 import java.util.List;
 

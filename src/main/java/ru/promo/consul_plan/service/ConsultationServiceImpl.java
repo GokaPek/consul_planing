@@ -1,10 +1,12 @@
 package ru.promo.consul_plan.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.entity.*;
+import ru.promo.consul_plan.mapper.ConsultationMapper;
 import ru.promo.consul_plan.repository.ConsultationRepository;
 
 import java.time.LocalDateTime;
@@ -15,25 +17,31 @@ import java.util.List;
 public class ConsultationServiceImpl implements ConsultationService {
 
     private final ConsultationRepository consultationRepository;
+
     private final NotificationService notificationService;
     private final ScheduleService scheduleService;
     private final ClientService clientService;
 
+    private final ConsultationMapper consultationMapper;
+
     @Override
-    public void create(ConsultationEntity entity) {
-        consultationRepository.save(entity);
+    @Transactional
+    public void create(Consultation dto) {
+        consultationRepository.save(consultationMapper.toEntity(dto));
     }
 
     @Override
-    public ConsultationEntity getById(Long id) {
-        return consultationRepository.findById(id).orElse(null);
+    @Transactional
+    public Consultation getById(Long id) {
+        return consultationMapper.toDTO(consultationRepository.findById(id).orElse(null));
     }
 
     @Override
-    public ConsultationEntity reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
+    @Transactional
+    public Consultation reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
 
-        var schedule = scheduleService.getById(scheduleId);
-        var client = clientService.getById(clientId);
+        var schedule = scheduleService.getEntityById(scheduleId);
+        var client = clientService.getEntityById(clientId);
 
         ConsultationEntity consultation = new ConsultationEntity();
 
@@ -56,22 +64,24 @@ public class ConsultationServiceImpl implements ConsultationService {
 
         scheduleService.update(schedule);
 
-        return reservedConsultation;
+        return consultationMapper.toDTO(reservedConsultation);
     }
 
     @Override
-    public List<ConsultationEntity> getClientConsultations(Long clientId) {
-        return consultationRepository.findByClientId(clientId);
+    @Transactional
+    public List<Consultation> getClientConsultations(Long clientId) {
+        return consultationMapper.toDTOList(consultationRepository.findByClientId(clientId));
     }
 
     @Override
-    public List<ConsultationEntity> getSpecialistConsultations(Long specialistId) {
-        return consultationRepository.findBySpecialistId(specialistId);
+    @Transactional
+    public List<Consultation> getSpecialistConsultations(Long specialistId) {
+        return consultationMapper.toDTOList(consultationRepository.findBySpecialistId(specialistId));
     }
 
-    // TODO
     @Override
-    public ConsultationEntity confirmConsultation(Long consultationId) {
+    @Transactional
+    public Consultation confirmConsultation(Long consultationId) throws ChangeSetPersister.NotFoundException {
         ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
         if (consultation != null) {
             consultation.setStatus(TypeStatus.CONFORMED);
@@ -86,13 +96,14 @@ public class ConsultationServiceImpl implements ConsultationService {
             notificationService.create(notification);
             notificationService.sendReminder(consultation);
 
-            return confirmedConsultation;
+            return consultationMapper.toDTO(confirmedConsultation);
         }
         return null;
     }
 
     @Override
-    public ConsultationEntity cancelConsultation(Long consultationId) {
+    @Transactional
+    public Consultation cancelConsultation(Long consultationId) {
         ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
         if (consultation != null) {
             consultation.setStatus(TypeStatus.CANCELLED);
@@ -111,12 +122,14 @@ public class ConsultationServiceImpl implements ConsultationService {
 
             scheduleService.update(schedule);
 
-            return cancelledConsultation;
+            return consultationMapper.toDTO(cancelledConsultation);
         }
         return null;
     }
 
-    // автоматические напоминания
+    //TODO
+    // автоматические напоминания, будет доделано после
+    /*
     @Scheduled(cron = "0 0 12 * * ?") // Запускать каждый день в 12:00
     public void sendDailyReminders() {
         LocalDateTime now = LocalDateTime.now();
@@ -134,4 +147,6 @@ public class ConsultationServiceImpl implements ConsultationService {
             }
         }
     }
+
+     */
 }
