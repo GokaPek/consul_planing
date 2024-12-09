@@ -1,0 +1,15 @@
+package ru.promo.consul_plan.mapper;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import ru.promo.consul_plan.domain.Notification;
+import ru.promo.consul_plan.domain.entity.NotificationEntity;
+
+@Mapper(componentModel = "spring")
+public interface NotificationMapper {
+    @Mapping(source = "consultation.id", target = "consultationId")
+    Notification toDTO(NotificationEntity notificationEntity);
+
+    @Mapping(source = "consultationId", target = "consultation.id")
+    NotificationEntity toEntity(Notification notification);
+}
