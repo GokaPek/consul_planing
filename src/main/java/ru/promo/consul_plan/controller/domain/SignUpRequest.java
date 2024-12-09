@@ -1,7 +1,7 @@
 package ru.promo.consul_plan.controller.domain;
 
 import lombok.Data;
-import ru.promo.consul_plan.domain.Role;
+import ru.promo.consul_plan.domain.entity.Role;
 
 @Data
 public class SignUpRequest {

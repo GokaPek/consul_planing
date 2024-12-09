@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.promo.consul_plan.controller.domain.SignInRequest;
 import ru.promo.consul_plan.controller.domain.SignUpRequest;
 import ru.promo.consul_plan.controller.domain.TokenResponse;
-import ru.promo.consul_plan.domain.Role;
+import ru.promo.consul_plan.domain.entity.Role;
 import ru.promo.consul_plan.domain.entity.Account;
 import ru.promo.consul_plan.domain.entity.ClientEntity;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
