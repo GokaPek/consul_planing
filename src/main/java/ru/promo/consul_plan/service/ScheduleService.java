@@ -9,17 +9,15 @@ import java.util.List;
 public interface ScheduleService {
     void create(Schedule dto);
 
-    ScheduleEntity getById(Long id);
+    Schedule getById(Long id);
 
     void update(Schedule dto);
 
-    void update(ScheduleEntity entity);
-
     void delete(Long id);
 
-    List<ScheduleEntity> getAllBySpecialistId(Long specialistId);
+    List<Schedule> getAllBySpecialistId(Long specialistId);
 
-    List<ScheduleEntity> getAll();
+    List<Schedule> getAll();
 
-    List<ScheduleEntity> findAllByDateTimeBetween(LocalDate localDate);
+    List<Schedule> findAllByDateTimeBetween(LocalDate localDate);
 }

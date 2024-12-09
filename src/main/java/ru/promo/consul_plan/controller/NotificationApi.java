@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
 
 import java.util.List;
@@ -16,15 +17,15 @@ public interface NotificationApi {
 
     @Operation(summary = "Создать уведомление")
     @PostMapping
-    ResponseEntity<NotificationEntity> createNotification(@Parameter(description = "Параметры для создания уведомления") @Valid @RequestBody NotificationEntity notification);
+    ResponseEntity<Notification> createNotification(@Parameter(description = "Параметры для создания уведомления") @Valid @RequestBody Notification notification);
 
     @Operation(summary = "Получить уведомление по ID")
     @GetMapping("/{id}")
-    ResponseEntity<NotificationEntity> getNotificationById(@Parameter(description = "ID уведомления") @PathVariable(name = "id") Long id);
+    ResponseEntity<Notification> getNotificationById(@Parameter(description = "ID уведомления") @PathVariable(name = "id") Long id);
 
     @Operation(summary = "Обновить уведомление")
     @PutMapping
-    ResponseEntity<NotificationEntity> updateNotification(@Parameter(description = "Параметры для изменения уведомления") @Valid @RequestBody NotificationEntity notification);
+    ResponseEntity<Notification> updateNotification(@Parameter(description = "Параметры для изменения уведомления") @Valid @RequestBody Notification notification);
 
     @Operation(summary = "Удалить уведомление")
     @DeleteMapping("/{id}")
@@ -32,11 +33,11 @@ public interface NotificationApi {
 
     @Operation(summary = "Получить все уведомления по ID консультации")
     @GetMapping("/consultation/{consultationId}")
-    ResponseEntity<List<NotificationEntity>> getNotificationsByConsultationId(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
+    ResponseEntity<List<Notification>> getNotificationsByConsultationId(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 
     @Operation(summary = "Получить все уведомления по ID клиента")
     @GetMapping("/client/{clientId}")
-    ResponseEntity<List<NotificationEntity>> getNotificationsByClientId(@Parameter(description = "ID клиента") @PathVariable(name = "clientId") Long clientId);
+    ResponseEntity<List<Notification>> getNotificationsByClientId(@Parameter(description = "ID клиента") @PathVariable(name = "clientId") Long clientId);
 
     @Operation(summary = "Отправить напоминание по ID консультации")
     @PostMapping("/reminder/{consultationId}")

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
 import java.util.List;
@@ -19,23 +20,23 @@ public interface ConsultationApi {
 
     @Operation(summary = "Резервирование консультации клиентом")
     @PostMapping("/reserve/{clientId}/{scheduleId}")
-    ResponseEntity<ConsultationEntity> reserveConsultation(
+    ResponseEntity<Consultation> reserveConsultation(
             @Parameter(description = "ID клиента") @PathVariable(name = "clientId") Long clientId,
             @Parameter(description = "ID расписания") @PathVariable(name = "scheduleId") Long scheduleId) throws ChangeSetPersister.NotFoundException;
 
     @Operation(summary = "Получить все консультации клиента")
     @GetMapping("/client/{clientId}")
-    ResponseEntity<List<ConsultationEntity>> getClientConsultations(
+    ResponseEntity<List<Consultation>> getClientConsultations(
             @Parameter(description = "ID клиента") @PathVariable(name = "clientId") Long clientId);
 
     @Operation(summary = "Получить все консультации специалиста")
     @GetMapping("/specialist/{specialistId}")
-    ResponseEntity<List<ConsultationEntity>> getSpecialistConsultations(
+    ResponseEntity<List<Consultation>> getSpecialistConsultations(
             @Parameter(description = "ID специалиста") @PathVariable(name = "specialistId") Long specialistId);
 
     @Operation(summary = "Подтверждение консультации специалистом")
     @PostMapping("/confirm/{consultationId}")
-    ResponseEntity<ConsultationEntity> confirmConsultation(
+    ResponseEntity<Consultation> confirmConsultation(
             @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 
     @Operation(summary = "Отклонение консультации специалистом")

@@ -22,7 +22,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Получить расписание по ID")
     @GetMapping("/{id}")
-    ResponseEntity<ScheduleEntity> getScheduleById(@Parameter(description = "ID расписания") @PathVariable(name = "id") Long id);
+    ResponseEntity<Schedule> getScheduleById(@Parameter(description = "ID расписания") @PathVariable(name = "id") Long id);
 
     @Operation(summary = "Обновить расписание")
     @PutMapping
@@ -34,7 +34,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Получить все расписания специалиста")
     @GetMapping("/specialist/{specialistId}")
-    ResponseEntity<List<ScheduleEntity>> getSchedulesBySpecialistId(@Parameter(description = "ID специалиста") @PathVariable(name = "specialistId") Long specialistId);
+    ResponseEntity<List<Schedule>> getSchedulesBySpecialistId(@Parameter(description = "ID специалиста") @PathVariable(name = "specialistId") Long specialistId);
 
     @Operation(summary = "Получить всех специалистов")
     @GetMapping("/specialists")
@@ -42,5 +42,5 @@ public interface ScheduleApi {
 
     @Operation(summary = "Получить все расписания")
     @GetMapping
-    ResponseEntity<List<ScheduleEntity>> getAllSchedule();
+    ResponseEntity<List<Schedule>> getAllSchedule();
 }

@@ -8,6 +8,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.promo.consul_plan.domain.Client;
+import ru.promo.consul_plan.domain.Specialist;
 import ru.promo.consul_plan.domain.entity.ClientEntity;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 
@@ -24,10 +26,10 @@ public interface AccountApi {
     @Operation(summary = "Получить всех специалистов (только для админа)")
     @GetMapping("/admin/specialists")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<List<SpecialistEntity>> getAllSpecialists();
+    ResponseEntity<List<Specialist>> getAllSpecialists();
 
     @Operation(summary = "Получить всех клиентов (только для админа)")
     @GetMapping("/admin/clients")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<List<ClientEntity>> getAllClients();
+    ResponseEntity<List<Client>> getAllClients();
 }

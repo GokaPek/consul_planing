@@ -7,17 +7,13 @@ import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import java.util.List;
 
 public interface SpecialistService {
-    void create(SpecialistEntity entity);
+    void create(Specialist entity);
 
-    SpecialistEntity getById(Long id) throws ChangeSetPersister.NotFoundException;
+    Specialist getById(Long id) throws ChangeSetPersister.NotFoundException;
 
-    void update(SpecialistEntity entity);
+    void update(Specialist entity);
 
     void delete(Long id);
 
-    List<SpecialistEntity> getAll();
-
-    List<Specialist> getAllSpecialistsDTO();
-
-    Specialist convertToDTO(SpecialistEntity specialist);
+    List<Specialist> getAll();
 }
