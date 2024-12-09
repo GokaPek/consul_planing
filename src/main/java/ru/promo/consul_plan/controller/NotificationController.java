@@ -2,9 +2,10 @@ package ru.promo.consul_plan.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import ru.promo.consul_plan.domain.entity.NotificationEntity;
+import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.service.ConsultationService;
 import ru.promo.consul_plan.service.NotificationService;
 
@@ -19,21 +20,21 @@ public class NotificationController implements NotificationApi {
     private final ConsultationService consultationService;
 
     @Override
-    public ResponseEntity<NotificationEntity> createNotification(NotificationEntity notification) {
+    public ResponseEntity<Notification> createNotification(Notification notification) {
         log.info("Create notification: {}", notification);
         notificationService.create(notification);
         return ResponseEntity.ok(notification);
     }
 
     @Override
-    public ResponseEntity<NotificationEntity> getNotificationById(Long id) {
+    public ResponseEntity<Notification> getNotificationById(Long id) {
         log.debug("Get notification by ID: {}", id);
-        NotificationEntity notification = notificationService.getById(id);
+        Notification notification = notificationService.getById(id);
         return ResponseEntity.ok(notification);
     }
 
     @Override
-    public ResponseEntity<NotificationEntity> updateNotification(NotificationEntity notification) {
+    public ResponseEntity<Notification> updateNotification(Notification notification) {
         log.info("Update notification: {}", notification);
         notificationService.update(notification);
         return ResponseEntity.ok(notification);
@@ -47,23 +48,23 @@ public class NotificationController implements NotificationApi {
     }
 
     @Override
-    public ResponseEntity<List<NotificationEntity>> getNotificationsByConsultationId(Long consultationId) {
+    public ResponseEntity<List<Notification>> getNotificationsByConsultationId(Long consultationId) {
         log.debug("Get notifications by consultation ID: {}", consultationId);
-        List<NotificationEntity> notificationsEntity = notificationService.getAllByConsultationId(consultationId);
+        List<Notification> notificationsEntity = notificationService.getAllByConsultationId(consultationId);
         return ResponseEntity.ok(notificationsEntity);
     }
 
     @Override
-    public ResponseEntity<List<NotificationEntity>> getNotificationsByClientId(Long clientId) {
+    public ResponseEntity<List<Notification>> getNotificationsByClientId(Long clientId) {
         log.debug("Get notifications by client ID: {}", clientId);
-        List<NotificationEntity> notificationsEntity = notificationService.getAllByClientId(clientId);
+        List<Notification> notificationsEntity = notificationService.getAllByClientId(clientId);
         return ResponseEntity.ok(notificationsEntity);
     }
 
     @Override
-    public ResponseEntity<Void> sendReminder(Long consultationId) {
+    public ResponseEntity<Void> sendReminder(Long consultationId) throws ChangeSetPersister.NotFoundException {
         log.info("Send reminder for consultation ID: {}", consultationId);
-        var consultation = consultationService.getById(consultationId);
+        var consultation = consultationService.getEntityById(consultationId);
         notificationService.sendReminder(consultation);
         return ResponseEntity.noContent().build();
     }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.promo.consul_plan.domain.Consultation;
-import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
 import java.util.List;
 
@@ -37,10 +36,10 @@ public interface ConsultationApi {
     @Operation(summary = "Подтверждение консультации специалистом")
     @PostMapping("/confirm/{consultationId}")
     ResponseEntity<Consultation> confirmConsultation(
-            @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
+            @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId) throws ChangeSetPersister.NotFoundException;
 
     @Operation(summary = "Отклонение консультации специалистом")
     @PostMapping("/cancel/{consultationId}")
-    ResponseEntity<ConsultationEntity> cancelConsultation(
+    ResponseEntity<Consultation> cancelConsultation(
             @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 }

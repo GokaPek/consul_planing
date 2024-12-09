@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RestController;
-import ru.promo.consul_plan.domain.entity.ClientEntity;
-import ru.promo.consul_plan.domain.entity.SpecialistEntity;
+import ru.promo.consul_plan.domain.Client;
+import ru.promo.consul_plan.domain.Specialist;
 import ru.promo.consul_plan.service.ClientService;
 import ru.promo.consul_plan.service.SpecialistService;
 
@@ -33,16 +33,16 @@ public class AccountController implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<List<SpecialistEntity>> getAllSpecialists() {
+    public ResponseEntity<List<Specialist>> getAllSpecialists() {
         log.debug("Request to get all specialists");
-        List<SpecialistEntity> specialists = specialistService.getAll();
+        List<Specialist> specialists = specialistService.getAll();
         return ResponseEntity.ok(specialists);
     }
 
     @Override
-    public ResponseEntity<List<ClientEntity>> getAllClients() {
+    public ResponseEntity<List<Client>> getAllClients() {
         log.debug("Request to get all clients");
-        List<ClientEntity> clients = clientService.getAll();
+        List<Client> clients = clientService.getAll();
         return ResponseEntity.ok(clients);
     }
 }

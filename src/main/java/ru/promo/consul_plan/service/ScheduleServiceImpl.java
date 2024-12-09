@@ -9,7 +9,6 @@ import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.mapper.ScheduleMapper;
 import ru.promo.consul_plan.repository.ScheduleRepository;
-import ru.promo.consul_plan.repository.SpecialistRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -38,6 +38,12 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
+    public ConsultationEntity getEntityById(Long id) {
+        return consultationRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
     public Consultation reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
 
         var schedule = scheduleService.getEntityById(scheduleId);
