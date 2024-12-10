@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification getById(Long id) {
+    public Notification getDTOById(Long id) {
         return notificationMapper.toDTO(notificationRepository.findById(id).orElse(null));
     }
 

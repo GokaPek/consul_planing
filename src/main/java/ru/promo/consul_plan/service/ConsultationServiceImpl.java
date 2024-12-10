@@ -32,13 +32,13 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
-    public Consultation getById(Long id) {
+    public Consultation getDTOById(Long id) {
         return consultationMapper.toDTO(consultationRepository.findById(id).orElse(null));
     }
 
     @Override
     @Transactional
-    public ConsultationEntity getEntityById(Long id) {
+    public ConsultationEntity getById(Long id) {
         return consultationRepository.findById(id).orElse(null);
     }
 
@@ -46,7 +46,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Transactional
     public Consultation reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
 
-        var schedule = scheduleService.getEntityById(scheduleId);
+        var schedule = scheduleService.getById(scheduleId);
         var client = clientService.getEntityById(clientId);
 
         ConsultationEntity consultation = new ConsultationEntity();

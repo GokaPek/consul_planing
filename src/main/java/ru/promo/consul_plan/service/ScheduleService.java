@@ -10,9 +10,9 @@ import java.util.List;
 public interface ScheduleService {
     void create(Schedule dto) throws ChangeSetPersister.NotFoundException;
 
-    Schedule getById(Long id);
+    Schedule getDTOById(Long id);
 
-    ScheduleEntity getEntityById(Long id);
+    ScheduleEntity getById(Long id);
 
     void update(Schedule dto) throws ChangeSetPersister.NotFoundException;
 

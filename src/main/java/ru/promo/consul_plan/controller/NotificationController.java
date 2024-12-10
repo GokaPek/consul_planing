@@ -29,7 +29,7 @@ public class NotificationController implements NotificationApi {
     @Override
     public ResponseEntity<Notification> getNotificationById(Long id) {
         log.debug("Get notification by ID: {}", id);
-        Notification notification = notificationService.getById(id);
+        Notification notification = notificationService.getDTOById(id);
         return ResponseEntity.ok(notification);
     }
 
@@ -64,7 +64,7 @@ public class NotificationController implements NotificationApi {
     @Override
     public ResponseEntity<Void> sendReminder(Long consultationId) throws ChangeSetPersister.NotFoundException {
         log.info("Send reminder for consultation ID: {}", consultationId);
-        var consultation = consultationService.getEntityById(consultationId);
+        var consultation = consultationService.getById(consultationId);
         notificationService.sendReminder(consultation);
         return ResponseEntity.noContent().build();
     }

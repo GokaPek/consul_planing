@@ -12,7 +12,7 @@ public interface NotificationService {
 
     void create(NotificationEntity entity);
 
-    Notification getById(Long id);
+    Notification getDTOById(Long id);
 
     void update(Notification dto);
 

@@ -30,7 +30,7 @@ public class ScheduleController implements ScheduleApi {
     @Override
     public ResponseEntity<Schedule> getScheduleById(Long id) {
         log.debug("Get schedule by ID: {}", id);
-        Schedule schedule = scheduleService.getById(id);
+        Schedule schedule = scheduleService.getDTOById(id);
         return ResponseEntity.ok(schedule);
     }
 

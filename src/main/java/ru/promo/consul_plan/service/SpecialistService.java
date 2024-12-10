@@ -11,9 +11,9 @@ public interface SpecialistService {
 
     void create(SpecialistEntity entity);
 
-    Specialist getById(Long id) throws ChangeSetPersister.NotFoundException;
+    Specialist getDTOById(Long id) throws ChangeSetPersister.NotFoundException;
 
-    SpecialistEntity getEntityById(Long id) throws ChangeSetPersister.NotFoundException;
+    SpecialistEntity getById(Long id) throws ChangeSetPersister.NotFoundException;
 
     void update(Specialist dto);
 

@@ -27,7 +27,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void create(Schedule dto) throws ChangeSetPersister.NotFoundException {
-        SpecialistEntity specialist = specialistService.getEntityById(dto.getSpecialistId());
+        SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
 
         ScheduleEntity entity = new ScheduleEntity();
         entity.setSpecialist(specialist);
@@ -38,12 +38,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Schedule getById(Long id) {
+    public Schedule getDTOById(Long id) {
         return scheduleMapper.toDTO(scheduleRepository.findById(id).orElse(null));
     }
 
     @Override
-    public ScheduleEntity getEntityById(Long id) {
+    public ScheduleEntity getById(Long id) {
         return scheduleRepository.findById(id).orElse(null);
     }
 
@@ -51,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void update(Schedule dto) throws ChangeSetPersister.NotFoundException {
         if (scheduleRepository.existsById(dto.getId())) {
-            SpecialistEntity specialist = specialistService.getEntityById(dto.getSpecialistId());
+            SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
 
             ScheduleEntity entity = new ScheduleEntity();
             entity.setId(dto.getId());
