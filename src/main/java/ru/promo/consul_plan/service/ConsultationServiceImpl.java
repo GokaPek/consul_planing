@@ -32,12 +32,6 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
-    public Consultation getDTOById(Long id) {
-        return consultationMapper.toDTO(consultationRepository.findById(id).orElse(null));
-    }
-
-    @Override
-    @Transactional
     public ConsultationEntity getById(Long id) {
         return consultationRepository.findById(id).orElse(null);
     }

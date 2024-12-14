@@ -9,8 +9,6 @@ import java.util.List;
 public interface ConsultationService {
     void create(Consultation entity);
 
-    Consultation getDTOById(Long id);
-
     ConsultationEntity getById(Long id);
 
     Consultation reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException;

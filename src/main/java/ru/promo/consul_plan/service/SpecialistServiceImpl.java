@@ -42,13 +42,6 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Override
     @Transactional
-    public Specialist getDTOById(Long id) throws ChangeSetPersister.NotFoundException {
-        return specialistMapper.toDTO(specialistRepository.findById(id)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException()));
-    }
-
-    @Override
-    @Transactional
     public SpecialistEntity getById(Long id) throws ChangeSetPersister.NotFoundException {
         return specialistRepository.findById(id)
                 .orElseThrow(() -> new ChangeSetPersister.NotFoundException());

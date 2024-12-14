@@ -8,12 +8,8 @@ import ru.promo.consul_plan.domain.entity.ClientEntity;
 import java.util.List;
 
 public interface ClientService {
-    void create(Client dto);
 
-    @Transactional
     void create(ClientEntity entity);
-
-    Client getById(Long id) throws ChangeSetPersister.NotFoundException;
 
     ClientEntity getEntityById(Long id) throws ChangeSetPersister.NotFoundException;
 

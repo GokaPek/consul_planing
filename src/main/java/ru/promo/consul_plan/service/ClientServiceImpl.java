@@ -21,28 +21,11 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void create(Client dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("Entity is null");
-        }
-        clientRepository.save(clientMapper.toEntity(dto));
-    }
-
-    @Override
-    @Transactional
     public void create(ClientEntity entity) {
         if (entity == null) {
             throw new IllegalArgumentException("Entity is null");
         }
         clientRepository.save(entity);
-    }
-
-    @Override
-    @Transactional
-    public Client getById(Long id) throws ChangeSetPersister.NotFoundException {
-        var entity = clientRepository.findById(id)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
-        return clientMapper.toDTO(entity);
     }
 
     @Override
