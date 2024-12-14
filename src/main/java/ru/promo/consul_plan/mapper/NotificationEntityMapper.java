@@ -5,8 +5,6 @@ import org.mapstruct.Mapping;
 import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface NotificationEntityMapper {
     @Mapping(source = "consultationId", target = "consultation.id")

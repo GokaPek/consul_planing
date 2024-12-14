@@ -5,8 +5,6 @@ import org.mapstruct.Mapping;
 import ru.promo.consul_plan.domain.Client;
 import ru.promo.consul_plan.domain.entity.ClientEntity;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface ClientEntityMapper {
     @Mapping(source = "name", target = "accountEntity.username")

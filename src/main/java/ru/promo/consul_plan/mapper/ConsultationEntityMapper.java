@@ -5,8 +5,6 @@ import org.mapstruct.Mapping;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface ConsultationEntityMapper {
     @Mapping(source = "specialistId", target = "specialist.id")
