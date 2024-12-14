@@ -29,7 +29,7 @@ public class NotificationController implements NotificationApi {
     @Override
     public ResponseEntity<Notification> getNotificationById(Long id) {
         log.debug("Get notification by ID: {}", id);
-        Notification notification = notificationService.getDTOById(id);
+        Notification notification = notificationService.getById(id);
         return ResponseEntity.ok(notification);
     }
 

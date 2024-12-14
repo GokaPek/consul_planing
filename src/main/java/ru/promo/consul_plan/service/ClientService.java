@@ -1,6 +1,5 @@
 package ru.promo.consul_plan.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import ru.promo.consul_plan.domain.Client;
 import ru.promo.consul_plan.domain.entity.ClientEntity;
