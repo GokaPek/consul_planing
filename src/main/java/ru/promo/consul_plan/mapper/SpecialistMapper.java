@@ -8,7 +8,6 @@ import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 
 import java.util.List;
 
-@Component
 @Mapper(componentModel = "spring")
 public interface SpecialistMapper {
     @Mapping(source = "accountEntity.username", target = "name")

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class Notification {
     private Long id;
     private Long consultationId;
-    private NotificationType type;
+    private TypeStatus type;
     private LocalDateTime sentDateTime;
-    private TypeStatus status;
+    private NotificationType status;
 }

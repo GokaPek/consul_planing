@@ -8,7 +8,6 @@ import ru.promo.consul_plan.domain.entity.NotificationEntity;
 
 import java.util.List;
 
-@Component
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
     @Mapping(source = "consultation.id", target = "consultationId")

@@ -8,7 +8,6 @@ import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 
 import java.util.List;
 
-@Component
 @Mapper(componentModel = "spring")
 public interface ConsultationMapper {
     @Mapping(source = "specialist.id", target = "specialistId")

@@ -8,7 +8,6 @@ import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 
 import java.util.List;
 
-@Component
 @Mapper(componentModel = "spring")
 public interface ScheduleMapper {
     @Mapping(source = "specialist.id", target = "specialistId")
