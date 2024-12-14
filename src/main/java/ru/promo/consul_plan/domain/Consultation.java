@@ -1,6 +1,7 @@
 package ru.promo.consul_plan.domain;
 
 import lombok.Data;
+import ru.promo.consul_plan.domain.entity.TypeStatus;
 
 @Data
 public class Consultation {
@@ -8,6 +9,6 @@ public class Consultation {
     private Long specialistId;
     private Long clientId;
     private Long scheduleId;
-    private String status;
-    private boolean reminderSent;
+    private TypeStatus status;
+    private Boolean reminderSent;
 }

@@ -31,8 +31,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         ScheduleEntity entity = new ScheduleEntity();
         entity.setSpecialist(specialist);
-        entity.setStartTime(LocalDateTime.parse(dto.getStartTime()));
-        entity.setEndTime(LocalDateTime.parse(dto.getEndTime()));
+        entity.setStartTime(dto.getStartTime());
+        entity.setEndTime(dto.getEndTime());
 
         scheduleRepository.save(entity);
     }
@@ -56,8 +56,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             ScheduleEntity entity = new ScheduleEntity();
             entity.setId(dto.getId());
             entity.setSpecialist(specialist);
-            entity.setStartTime(LocalDateTime.parse(dto.getStartTime()));
-            entity.setEndTime(LocalDateTime.parse(dto.getEndTime()));
+            entity.setStartTime(dto.getStartTime());
+            entity.setEndTime(dto.getEndTime());
 
             scheduleRepository.save(entity);
         }
