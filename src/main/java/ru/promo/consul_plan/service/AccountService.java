@@ -1,14 +1,14 @@
 package ru.promo.consul_plan.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.promo.consul_plan.domain.entity.Account;
+import ru.promo.consul_plan.domain.entity.AccountEntity;
 
 public interface AccountService {
-    Account save(Account user);
+    AccountEntity save(AccountEntity user);
 
-    Account create(Account user);
+    AccountEntity create(AccountEntity user);
 
-    Account getByUsername(String username);
+    AccountEntity getByUsername(String username);
 
     UserDetailsService userDetailsService();
 }

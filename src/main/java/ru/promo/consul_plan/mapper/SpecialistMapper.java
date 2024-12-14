@@ -11,12 +11,11 @@ import java.util.List;
 @Component
 @Mapper(componentModel = "spring")
 public interface SpecialistMapper {
-    @Mapping(source = "account.username", target = "name")
+    @Mapping(source = "accountEntity.username", target = "name")
     Specialist toDTO(SpecialistEntity specialistEntity);
 
-    @Mapping(source = "name", target = "account.username")
+    @Mapping(source = "name", target = "accountEntity.username")
     SpecialistEntity toEntity(Specialist specialist);
 
-    @Mapping(source = "account.username", target = "name")
     List<Specialist> toDTOList(List<SpecialistEntity> entities);
 }

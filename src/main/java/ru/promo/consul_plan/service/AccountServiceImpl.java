@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.domain.entity.Account;
+import ru.promo.consul_plan.domain.entity.AccountEntity;
 import ru.promo.consul_plan.repository.AccountRepository;
 
 @Service
@@ -14,12 +14,12 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository repository;
 
     @Override
-    public Account save(Account user) {
+    public AccountEntity save(AccountEntity user) {
         return repository.save(user);
     }
 
     @Override
-    public Account create(Account user) {
+    public AccountEntity create(AccountEntity user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
@@ -28,7 +28,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getByUsername(String username) {
+    public AccountEntity getByUsername(String username) {
         return repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 

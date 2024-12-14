@@ -15,7 +15,7 @@ public class SpecialistEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    private AccountEntity accountEntity;
 
     @Column(name = "specialization", nullable = false, length = 100)
     private String specialization;

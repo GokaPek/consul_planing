@@ -17,6 +17,5 @@ public interface NotificationMapper {
     @Mapping(source = "consultationId", target = "consultation.id")
     NotificationEntity toEntity(Notification notification);
 
-    @Mapping(source = "consultation.id", target = "consultationId")
     List<Notification> toDTOList(List<NotificationEntity> entities);
 }

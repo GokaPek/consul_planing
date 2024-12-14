@@ -79,9 +79,9 @@ public class NotificationServiceImpl implements NotificationService {
 
         // Отправка уведомления по электронной почте
         try {
-            String email = client.getAccount().getUsername();
+            String email = client.getAccountEntity().getUsername();
             String subject = "Напоминание о консультации";
-            String text = "Уважаемый пользователь, напоминаем вам о предстоящей консультации у специалиста " + consultation.getSpecialist().getAccount().getUsername();
+            String text = "Уважаемый пользователь, напоминаем вам о предстоящей консультации у специалиста " + consultation.getSpecialist().getAccountEntity().getUsername();
             emailService.sendEmail(email, subject, text);
         } catch (MessagingException e) {
             e.printStackTrace();

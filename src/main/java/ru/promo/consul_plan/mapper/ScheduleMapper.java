@@ -17,6 +17,5 @@ public interface ScheduleMapper {
     @Mapping(source = "specialistId", target = "specialist.id")
     ScheduleEntity toEntity(Schedule schedule);
 
-    @Mapping(source = "specialist.id", target = "specialistId")
     List<Schedule> toDTOlist(List<ScheduleEntity> entities);
 }

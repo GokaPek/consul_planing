@@ -19,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "account")
-public class Account implements UserDetails {
+public class AccountEntity implements UserDetails {
 
     @Id
     @GeneratedValue

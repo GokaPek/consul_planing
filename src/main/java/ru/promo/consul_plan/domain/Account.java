@@ -2,9 +2,11 @@ package ru.promo.consul_plan.domain;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class Account {
-    private Long id;
+    private UUID id;
     private String username;
     private String password;
     private String role;
