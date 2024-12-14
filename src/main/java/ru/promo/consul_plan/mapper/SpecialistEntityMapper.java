@@ -8,9 +8,7 @@ import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface SpecialistMapper {
-    @Mapping(source = "accountEntity.username", target = "name")
-    Specialist toDTO(SpecialistEntity specialistEntity);
-
-    List<Specialist> toDTOList(List<SpecialistEntity> entities);
+public interface SpecialistEntityMapper {
+    @Mapping(source = "name", target = "accountEntity.username")
+    SpecialistEntity toEntity(Specialist specialist);
 }

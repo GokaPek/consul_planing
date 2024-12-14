@@ -6,6 +6,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.entity.*;
+import ru.promo.consul_plan.mapper.ConsultationEntityMapper;
 import ru.promo.consul_plan.mapper.ConsultationMapper;
 import ru.promo.consul_plan.repository.ConsultationRepository;
 
@@ -23,11 +24,12 @@ public class ConsultationServiceImpl implements ConsultationService {
     private final ClientService clientService;
 
     private final ConsultationMapper consultationMapper;
+    private final ConsultationEntityMapper consultationEntityMapper;
 
     @Override
     @Transactional
     public void create(Consultation dto) {
-        consultationRepository.save(consultationMapper.toEntity(dto));
+        consultationRepository.save(consultationEntityMapper.toEntity(dto));
     }
 
     @Override

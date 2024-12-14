@@ -8,9 +8,7 @@ import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface NotificationMapper {
-    @Mapping(source = "consultation.id", target = "consultationId")
-    Notification toDTO(NotificationEntity notificationEntity);
-
-    List<Notification> toDTOList(List<NotificationEntity> entities);
+public interface NotificationEntityMapper {
+    @Mapping(source = "consultationId", target = "consultation.id")
+    NotificationEntity toEntity(Notification notification);
 }

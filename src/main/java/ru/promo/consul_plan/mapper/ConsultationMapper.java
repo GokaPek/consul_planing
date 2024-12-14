@@ -14,10 +14,5 @@ public interface ConsultationMapper {
     @Mapping(source = "schedule.id", target = "scheduleId")
     Consultation toDTO(ConsultationEntity consultationEntity);
 
-    @Mapping(source = "specialistId", target = "specialist.id")
-    @Mapping(source = "clientId", target = "client.id")
-    @Mapping(source = "scheduleId", target = "schedule.id")
-    ConsultationEntity toEntity(Consultation consultation);
-
     List<Consultation> toDTOList(List<ConsultationEntity> consultationEntities);
 }

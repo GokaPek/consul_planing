@@ -8,9 +8,7 @@ import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface ScheduleMapper {
-    @Mapping(source = "specialist.id", target = "specialistId")
-    Schedule toDTO(ScheduleEntity scheduleEntity);
-
-    List<Schedule> toDTOlist(List<ScheduleEntity> entities);
+public interface ScheduleEntityMapper {
+    @Mapping(source = "specialistId", target = "specialist.id")
+    ScheduleEntity toEntity(Schedule schedule);
 }

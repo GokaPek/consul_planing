@@ -8,6 +8,7 @@ import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationType;
 import ru.promo.consul_plan.domain.entity.TypeStatus;
+import ru.promo.consul_plan.mapper.NotificationEntityMapper;
 import ru.promo.consul_plan.mapper.NotificationMapper;
 import ru.promo.consul_plan.repository.NotificationRepository;
 
@@ -23,10 +24,11 @@ public class NotificationServiceImpl implements NotificationService {
     private final EmailService emailService;
 
     private final NotificationMapper notificationMapper;
+    private final NotificationEntityMapper notificationEntityMapper;
 
     @Override
     public void create(Notification dto) {
-        notificationRepository.save(notificationMapper.toEntity(dto));
+        notificationRepository.save(notificationEntityMapper.toEntity(dto));
     }
 
     @Override
@@ -42,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void update(Notification dto) {
         if (notificationRepository.existsById(dto.getId())) {
-            notificationRepository.save(notificationMapper.toEntity(dto));
+            notificationRepository.save(notificationEntityMapper.toEntity(dto));
         }
     }
 

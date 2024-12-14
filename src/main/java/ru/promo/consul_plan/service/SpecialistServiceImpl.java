@@ -6,6 +6,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Specialist;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
+import ru.promo.consul_plan.mapper.SpecialistEntityMapper;
 import ru.promo.consul_plan.mapper.SpecialistMapper;
 import ru.promo.consul_plan.repository.SpecialistRepository;
 
@@ -18,6 +19,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     private final SpecialistRepository specialistRepository;
 
     private final SpecialistMapper specialistMapper;
+    private final SpecialistEntityMapper specialistEntityMapper;
 
     @Override
     @Transactional
@@ -26,7 +28,7 @@ public class SpecialistServiceImpl implements SpecialistService {
             throw new IllegalArgumentException("Entity is null");
         }
 
-        var entity = specialistMapper.toEntity(dto);
+        var entity = specialistEntityMapper.toEntity(dto);
 
         specialistRepository.save(entity);
     }
@@ -53,7 +55,7 @@ public class SpecialistServiceImpl implements SpecialistService {
         if (dto == null || dto.getId() == null) {
             throw new IllegalArgumentException("Entity or ID is null");
         }
-        specialistRepository.save(specialistMapper.toEntity(dto));
+        specialistRepository.save(specialistEntityMapper.toEntity(dto));
     }
 
     @Override
