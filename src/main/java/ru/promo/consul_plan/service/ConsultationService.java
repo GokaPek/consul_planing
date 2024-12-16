@@ -7,7 +7,8 @@ import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import java.util.List;
 
 public interface ConsultationService {
-    void create(Consultation entity);
+    void create(Consultation dto);
+    void update(ConsultationEntity entity);
 
     ConsultationEntity getById(Long id);
 

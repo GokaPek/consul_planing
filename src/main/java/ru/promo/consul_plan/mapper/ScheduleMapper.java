@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ScheduleMapper {
     @Mapping(source = "specialist.id", target = "specialistId")
+    @Mapping(source = "client.id", target = "clientId")
     Schedule toDTO(ScheduleEntity scheduleEntity);
 
     List<Schedule> toDTOlist(List<ScheduleEntity> entities);

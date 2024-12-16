@@ -35,6 +35,13 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
+    public void update(ConsultationEntity entity) {
+        consultationRepository.save(entity);
+    }
+
+
+    @Override
+    @Transactional
     public ConsultationEntity getById(Long id) {
         return consultationRepository.findById(id).orElse(null);
     }
@@ -132,27 +139,4 @@ public class ConsultationServiceImpl implements ConsultationService {
         }
         return null;
     }
-
-    //TODO
-    // автоматические напоминания, будет доделано после
-    /*
-    @Scheduled(cron = "0 0 12 * * ?") // Запускать каждый день в 12:00
-    public void sendDailyReminders() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime tomorrow = now.plusDays(1);
-
-        List<ScheduleEntity> entities = scheduleService.findAllByDateTimeBetween(tomorrow.toLocalDate());
-
-        for (ScheduleEntity entity : entities) {
-            var consultations = consultationRepository.findByClientId(entity.getClient().getId());
-            for (ConsultationEntity consultation : consultations) {
-                if (consultation.getStatus() == TypeStatus.CONFORMED) {
-                    notificationService.sendReminder(consultation);
-                    consultation.setReminderSent(true);
-                }
-            }
-        }
-    }
-
-     */
 }
