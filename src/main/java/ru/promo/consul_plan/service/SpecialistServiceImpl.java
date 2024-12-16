@@ -6,16 +6,32 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Specialist;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
+import ru.promo.consul_plan.mapper.SpecialistEntityMapper;
+import ru.promo.consul_plan.mapper.SpecialistMapper;
 import ru.promo.consul_plan.repository.SpecialistRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SpecialistServiceImpl implements SpecialistService {
 
     private final SpecialistRepository specialistRepository;
+
+    private final SpecialistMapper specialistMapper;
+    private final SpecialistEntityMapper specialistEntityMapper;
+
+    @Override
+    @Transactional
+    public void create(Specialist dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("Entity is null");
+        }
+
+        var entity = specialistEntityMapper.toEntity(dto);
+
+        specialistRepository.save(entity);
+    }
 
     @Override
     @Transactional
@@ -35,11 +51,11 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Override
     @Transactional
-    public void update(SpecialistEntity entity) {
-        if (entity == null || entity.getId() == null) {
+    public void update(Specialist dto) {
+        if (dto == null || dto.getId() == null) {
             throw new IllegalArgumentException("Entity or ID is null");
         }
-        specialistRepository.save(entity);
+        specialistRepository.save(specialistEntityMapper.toEntity(dto));
     }
 
     @Override
@@ -50,24 +66,7 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Override
     @Transactional
-    public List<SpecialistEntity> getAll() {
-        return specialistRepository.findAll();
-    }
-
-    @Override
-    public List<Specialist> getAllSpecialistsDTO() {
-        List<SpecialistEntity> specialists = specialistRepository.findAll();
-        return specialists.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Specialist convertToDTO(SpecialistEntity specialist) {
-        return new Specialist(
-                specialist.getId(),
-                specialist.getAccount().getUsername(),
-                specialist.getSpecialization()
-        );
+    public List<Specialist> getAll() {
+        return specialistMapper.toDTOList(specialistRepository.findAll());
     }
 }

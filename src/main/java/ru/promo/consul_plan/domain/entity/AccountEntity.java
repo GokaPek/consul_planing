@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.promo.consul_plan.domain.Role;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "account")
-public class Account implements UserDetails {
+public class AccountEntity implements UserDetails {
 
     @Id
     @GeneratedValue

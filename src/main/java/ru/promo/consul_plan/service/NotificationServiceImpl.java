@@ -3,10 +3,13 @@ package ru.promo.consul_plan.service;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.promo.consul_plan.domain.Notification;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationType;
 import ru.promo.consul_plan.domain.entity.TypeStatus;
+import ru.promo.consul_plan.mapper.NotificationEntityMapper;
+import ru.promo.consul_plan.mapper.NotificationMapper;
 import ru.promo.consul_plan.repository.NotificationRepository;
 
 import java.time.LocalDateTime;
@@ -20,20 +23,28 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final EmailService emailService;
 
+    private final NotificationMapper notificationMapper;
+    private final NotificationEntityMapper notificationEntityMapper;
+
+    @Override
+    public void create(Notification dto) {
+        notificationRepository.save(notificationEntityMapper.toEntity(dto));
+    }
+
     @Override
     public void create(NotificationEntity entity) {
         notificationRepository.save(entity);
     }
 
     @Override
-    public NotificationEntity getById(Long id) {
-        return notificationRepository.findById(id).orElse(null);
+    public Notification getById(Long id) {
+        return notificationMapper.toDTO(notificationRepository.findById(id).orElse(null));
     }
 
     @Override
-    public void update(NotificationEntity entity) {
-        if (notificationRepository.existsById(entity.getId())) {
-            notificationRepository.save(entity);
+    public void update(Notification dto) {
+        if (notificationRepository.existsById(dto.getId())) {
+            notificationRepository.save(notificationEntityMapper.toEntity(dto));
         }
     }
 
@@ -43,13 +54,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationEntity> getAllByConsultationId(Long consultationId) {
-        return notificationRepository.findAllByConsultationId(consultationId);
+    public List<Notification> getAllByConsultationId(Long consultationId) {
+        return notificationMapper.toDTOList(notificationRepository.findAllByConsultationId(consultationId));
     }
 
     @Override
-    public List<NotificationEntity> getAllByClientId(Long clientId) {
-        return notificationRepository.findAllByConsultationClientId(clientId);
+    public List<Notification> getAllByClientId(Long clientId) {
+        return notificationMapper.toDTOList(notificationRepository.findAllByConsultationClientId(clientId));
     }
 
     @Override
@@ -70,9 +81,9 @@ public class NotificationServiceImpl implements NotificationService {
 
         // Отправка уведомления по электронной почте
         try {
-            String email = client.getAccount().getUsername();
+            String email = client.getAccountEntity().getUsername();
             String subject = "Напоминание о консультации";
-            String text = "Уважаемый пользователь, напоминаем вам о предстоящей консультации у специалиста " + consultation.getSpecialist().getAccount().getUsername();
+            String text = "Уважаемый пользователь, напоминаем вам о предстоящей консультации у специалиста " + consultation.getSpecialist().getAccountEntity().getUsername();
             emailService.sendEmail(email, subject, text);
         } catch (MessagingException e) {
             e.printStackTrace();

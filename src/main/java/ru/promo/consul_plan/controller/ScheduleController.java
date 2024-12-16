@@ -2,11 +2,11 @@ package ru.promo.consul_plan.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.Specialist;
-import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.service.ScheduleService;
 import ru.promo.consul_plan.service.SpecialistService;
 
@@ -21,21 +21,21 @@ public class ScheduleController implements ScheduleApi {
     private final SpecialistService specialistService;
 
     @Override
-    public ResponseEntity<Void> createSchedule(Schedule schedule) {
+    public ResponseEntity<Void> createSchedule(Schedule schedule) throws ChangeSetPersister.NotFoundException {
         log.info("Create schedule: {}", schedule);
         scheduleService.create(schedule);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<ScheduleEntity> getScheduleById(Long id) {
+    public ResponseEntity<Schedule> getScheduleById(Long id) {
         log.debug("Get schedule by ID: {}", id);
-        ScheduleEntity schedule = scheduleService.getById(id);
+        Schedule schedule = scheduleService.getDTOById(id);
         return ResponseEntity.ok(schedule);
     }
 
     @Override
-    public ResponseEntity<Void> updateSchedule(Schedule schedule) {
+    public ResponseEntity<Void> updateSchedule(Schedule schedule) throws ChangeSetPersister.NotFoundException {
         log.info("Update schedule: {}", schedule);
         scheduleService.update(schedule);
         return ResponseEntity.ok().build();
@@ -49,23 +49,23 @@ public class ScheduleController implements ScheduleApi {
     }
 
     @Override
-    public ResponseEntity<List<ScheduleEntity>> getSchedulesBySpecialistId(Long specialistId) {
+    public ResponseEntity<List<Schedule>> getSchedulesBySpecialistId(Long specialistId) {
         log.debug("Get schedules by specialist ID: {}", specialistId);
-        List<ScheduleEntity> schedules = scheduleService.getAllBySpecialistId(specialistId);
+        List<Schedule> schedules = scheduleService.getAllBySpecialistId(specialistId);
         return ResponseEntity.ok(schedules);
     }
 
     @Override
     public ResponseEntity<List<Specialist>> getAllSpecialists() {
         log.debug("Get all specialists");
-        List<Specialist> specialists = specialistService.getAllSpecialistsDTO();
+        List<Specialist> specialists = specialistService.getAll();
         return ResponseEntity.ok(specialists);
     }
 
     @Override
-    public ResponseEntity<List<ScheduleEntity>> getAllSchedule() {
+    public ResponseEntity<List<Schedule>> getAllSchedule() {
         log.debug("Get all schedules");
-        List<ScheduleEntity> schedules = scheduleService.getAll();
+        List<Schedule> schedules = scheduleService.getAll();
         return ResponseEntity.ok(schedules);
     }
 

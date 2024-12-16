@@ -14,5 +14,5 @@ public class ClientEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
-    private Account account;
+    private AccountEntity accountEntity;
 }
