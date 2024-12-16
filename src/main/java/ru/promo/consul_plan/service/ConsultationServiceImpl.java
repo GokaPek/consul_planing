@@ -6,6 +6,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.entity.*;
+import ru.promo.consul_plan.exception.ReserveException;
 import ru.promo.consul_plan.mapper.ConsultationEntityMapper;
 import ru.promo.consul_plan.mapper.ConsultationMapper;
 import ru.promo.consul_plan.repository.ConsultationRepository;
@@ -40,10 +41,13 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
-    public Consultation reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
+    public Consultation reserveConsultation(Long scheduleId, Long clientId) {
 
-        var schedule = scheduleService.getById(scheduleId);
-        var client = clientService.getEntityById(clientId);
+        var client = clientService.getEntityById(clientId)
+                .orElseThrow(() -> new ReserveException("Client not found with id: " + clientId));
+        var schedule = scheduleService.getById(scheduleId)
+                .orElseThrow(() -> new ReserveException("Schedule not found with id: " + scheduleId));
+
 
         ConsultationEntity consultation = new ConsultationEntity();
 

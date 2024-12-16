@@ -2,7 +2,6 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Client;
 import ru.promo.consul_plan.domain.entity.ClientEntity;
@@ -11,6 +10,7 @@ import ru.promo.consul_plan.mapper.ClientMapper;
 import ru.promo.consul_plan.repository.ClientRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +32,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public ClientEntity getEntityById(Long id) throws ChangeSetPersister.NotFoundException {
-        return clientRepository.findById(id)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+    public Optional<ClientEntity> getEntityById(Long id) {
+        return clientRepository.findById(id);
     }
 
     @Override

@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +44,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleEntity getById(Long id) {
-        return scheduleRepository.findById(id).orElse(null);
+    public Optional<ScheduleEntity> getById(Long id) {
+        return scheduleRepository.findById(id);
     }
 
 

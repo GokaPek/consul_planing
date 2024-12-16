@@ -18,7 +18,7 @@ public class ConsultationController implements ConsultationApi {
     private final ConsultationService consultationService;
 
     @Override
-    public ResponseEntity<Consultation> reserveConsultation(Long clientId, Long scheduleId) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Consultation> reserveConsultation(Long clientId, Long scheduleId) {
         log.info("Reserve consultation for client {} and schedule {}", clientId, scheduleId);
         Consultation reservedConsultation = consultationService.reserveConsultation(scheduleId, clientId);
         return ResponseEntity.ok(reservedConsultation);

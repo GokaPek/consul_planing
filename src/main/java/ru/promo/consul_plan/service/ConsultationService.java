@@ -11,7 +11,7 @@ public interface ConsultationService {
 
     ConsultationEntity getById(Long id);
 
-    Consultation reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException;
+    Consultation reserveConsultation(Long scheduleId, Long clientId);
 
     List<Consultation> getClientConsultations(Long clientId);
 

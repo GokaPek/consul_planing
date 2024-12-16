@@ -6,13 +6,14 @@ import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleService {
     void create(Schedule dto) throws ChangeSetPersister.NotFoundException;
 
     Schedule getDTOById(Long id);
 
-    ScheduleEntity getById(Long id);
+    Optional<ScheduleEntity> getById(Long id);
 
     void update(Schedule dto) throws ChangeSetPersister.NotFoundException;
 

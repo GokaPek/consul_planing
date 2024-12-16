@@ -1,16 +1,16 @@
 package ru.promo.consul_plan.service;
 
-import org.springframework.data.crossstore.ChangeSetPersister;
 import ru.promo.consul_plan.domain.Client;
 import ru.promo.consul_plan.domain.entity.ClientEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClientService {
 
     void create(ClientEntity entity);
 
-    ClientEntity getEntityById(Long id) throws ChangeSetPersister.NotFoundException;
+    Optional<ClientEntity> getEntityById(Long id);
 
     void update(Client dto);
 
