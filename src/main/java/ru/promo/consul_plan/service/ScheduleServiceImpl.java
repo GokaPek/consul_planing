@@ -2,7 +2,6 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
@@ -27,7 +26,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleMapper scheduleMapper;
 
     @Override
-    public void create(Schedule dto) throws ChangeSetPersister.NotFoundException {
+    public void create(Schedule dto) {
         SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
 
         ScheduleEntity entity = new ScheduleEntity();
@@ -50,7 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
     @Override
-    public void update(Schedule dto) throws ChangeSetPersister.NotFoundException {
+    public void update(Schedule dto) {
         if (scheduleRepository.existsById(dto.getId())) {
             SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
 

@@ -2,7 +2,6 @@ package ru.promo.consul_plan.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.promo.consul_plan.domain.Schedule;
@@ -21,7 +20,7 @@ public class ScheduleController implements ScheduleApi {
     private final SpecialistService specialistService;
 
     @Override
-    public ResponseEntity<Void> createSchedule(Schedule schedule) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Void> createSchedule(Schedule schedule) {
         log.info("Create schedule: {}", schedule);
         scheduleService.create(schedule);
         return ResponseEntity.ok().build();
@@ -35,7 +34,7 @@ public class ScheduleController implements ScheduleApi {
     }
 
     @Override
-    public ResponseEntity<Void> updateSchedule(Schedule schedule) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Void> updateSchedule(Schedule schedule) {
         log.info("Update schedule: {}", schedule);
         scheduleService.update(schedule);
         return ResponseEntity.ok().build();

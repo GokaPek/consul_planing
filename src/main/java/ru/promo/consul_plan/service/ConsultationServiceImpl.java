@@ -2,7 +2,6 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.entity.*;
@@ -94,7 +93,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
-    public Consultation confirmConsultation(Long consultationId) throws ChangeSetPersister.NotFoundException {
+    public Consultation confirmConsultation(Long consultationId) {
         ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
         if (consultation != null) {
             consultation.setStatus(TypeStatus.CONFORMED);
