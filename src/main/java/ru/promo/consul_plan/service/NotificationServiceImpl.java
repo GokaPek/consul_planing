@@ -8,6 +8,7 @@ import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationEntity;
 import ru.promo.consul_plan.domain.entity.NotificationType;
 import ru.promo.consul_plan.domain.entity.TypeStatus;
+import ru.promo.consul_plan.exception.NotFoundException;
 import ru.promo.consul_plan.mapper.NotificationEntityMapper;
 import ru.promo.consul_plan.mapper.NotificationMapper;
 import ru.promo.consul_plan.repository.NotificationRepository;
@@ -38,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Notification getById(Long id) {
-        return notificationMapper.toDTO(notificationRepository.findById(id).orElse(null));
+        return notificationMapper.toDTO(notificationRepository.findById(id).orElseThrow(() -> new NotFoundException("Notification not found with id: " + id)));
     }
 
     @Override
@@ -77,7 +78,6 @@ public class NotificationServiceImpl implements NotificationService {
         reminder.setStatus(NotificationType.SENT);
         notificationRepository.save(reminder);
 
-        String massage;
 
         // Отправка уведомления по электронной почте
         try {

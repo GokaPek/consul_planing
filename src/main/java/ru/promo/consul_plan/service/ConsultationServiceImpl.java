@@ -42,7 +42,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     @Transactional
     public ConsultationEntity getById(Long id) {
-        return consultationRepository.findById(id).orElse(null);
+        return consultationRepository.findById(id).orElseThrow(() -> new NotFoundException("Consultation not found with id: " + id));
     }
 
     @Override
@@ -94,7 +94,8 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     @Transactional
     public Consultation confirmConsultation(Long consultationId) {
-        ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
+        ConsultationEntity consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
         if (consultation != null) {
             consultation.setStatus(TypeStatus.CONFORMED);
             ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
@@ -116,7 +117,8 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     @Transactional
     public Consultation cancelConsultation(Long consultationId) {
-        ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
+        ConsultationEntity consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
         if (consultation != null) {
             consultation.setStatus(TypeStatus.CANCELLED);
             ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);

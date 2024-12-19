@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
+import ru.promo.consul_plan.exception.NotFoundException;
 import ru.promo.consul_plan.mapper.ScheduleMapper;
 import ru.promo.consul_plan.repository.ScheduleRepository;
 
@@ -39,7 +40,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Schedule getDTOById(Long id) {
-        return scheduleMapper.toDTO(scheduleRepository.findById(id).orElse(null));
+        return scheduleMapper.toDTO(scheduleRepository.findById(id).orElseThrow(() -> new NotFoundException("Schedule not found with id: " + id)));
     }
 
     @Override
