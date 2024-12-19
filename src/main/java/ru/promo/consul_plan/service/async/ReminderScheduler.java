@@ -1,6 +1,8 @@
 package ru.promo.consul_plan.service.async;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+        prefix = "reminder.scheduler",
+        name = "enabled",
+        havingValue = "true"
+)
 public class ReminderScheduler {
     private final ScheduleService scheduleService;
     private final NotificationService notificationService;
@@ -24,10 +32,7 @@ public class ReminderScheduler {
 
     private final ConsultationRepository consultationRepository;
 
-
-
-    // Запускать каждый день в 12:00
-    @Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "${reminder.scheduler.cron}")
     public void sendDailyReminders() throws ChangeSetPersister.NotFoundException {
         LocalDate now = LocalDate.now();
         LocalDate tomorrow = now.plusDays(1);
@@ -47,5 +52,6 @@ public class ReminderScheduler {
                 }
             }
         }
+        log.info("Daily reminders task completed");
     }
 }

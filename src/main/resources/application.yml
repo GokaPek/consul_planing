@@ -26,6 +26,10 @@ spring:
           auth: true
           starttls:
             enable: true
+reminder:
+  scheduler:
+    enabled: true
+    cron: "0 0 12 * * ?"
 logging:
   file:
     name: logs/app.log
