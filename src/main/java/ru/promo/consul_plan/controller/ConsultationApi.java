@@ -21,7 +21,7 @@ public interface ConsultationApi {
     @PostMapping("/reserve/{clientId}/{scheduleId}")
     ResponseEntity<Consultation> reserveConsultation(
             @Parameter(description = "ID клиента") @PathVariable(name = "clientId") Long clientId,
-            @Parameter(description = "ID расписания") @PathVariable(name = "scheduleId") Long scheduleId) throws ChangeSetPersister.NotFoundException;
+            @Parameter(description = "ID расписания") @PathVariable(name = "scheduleId") Long scheduleId);
 
     @Operation(summary = "Получить все консультации клиента")
     @GetMapping("/client/{clientId}")
@@ -36,7 +36,7 @@ public interface ConsultationApi {
     @Operation(summary = "Подтверждение консультации специалистом")
     @PostMapping("/confirm/{consultationId}")
     ResponseEntity<Consultation> confirmConsultation(
-            @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId) throws ChangeSetPersister.NotFoundException;
+            @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 
     @Operation(summary = "Отклонение консультации специалистом")
     @PostMapping("/cancel/{consultationId}")

@@ -41,5 +41,5 @@ public interface NotificationApi {
 
     @Operation(summary = "Отправить напоминание по ID консультации")
     @PostMapping("/reminder/{consultationId}")
-    ResponseEntity<Void> sendReminder(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId) throws ChangeSetPersister.NotFoundException;
+    ResponseEntity<Void> sendReminder(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 }
