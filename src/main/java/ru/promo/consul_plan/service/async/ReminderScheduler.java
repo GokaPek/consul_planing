@@ -33,7 +33,7 @@ public class ReminderScheduler {
     private final ConsultationRepository consultationRepository;
 
     @Scheduled(cron = "${reminder.scheduler.cron}")
-    public void sendDailyReminders() throws ChangeSetPersister.NotFoundException {
+    public void sendDailyReminders() {
         LocalDate now = LocalDate.now();
         LocalDate tomorrow = now.plusDays(1);
 

@@ -9,7 +9,7 @@ import ru.promo.consul_plan.domain.ErrorResponse;
 import ru.promo.consul_plan.exception.NotFoundException;
 
 @ControllerAdvice
-public class NotFoundExceptionHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCustomNotFoundException(NotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
