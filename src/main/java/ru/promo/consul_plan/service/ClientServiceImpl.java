@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Client;
 import ru.promo.consul_plan.domain.entity.ClientEntity;
+import ru.promo.consul_plan.exception.CustomIllegalArgumentException;
 import ru.promo.consul_plan.mapper.ClientEntityMapper;
 import ru.promo.consul_plan.mapper.ClientMapper;
 import ru.promo.consul_plan.repository.ClientRepository;
@@ -25,7 +26,7 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public void create(ClientEntity entity) {
         if (entity == null) {
-            throw new IllegalArgumentException("Entity is null");
+            throw new CustomIllegalArgumentException("Недостаточно данных для создания клиента");
         }
         clientRepository.save(entity);
     }
@@ -40,7 +41,7 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public void update(Client dto) {
         if (dto == null || dto.getId() == null) {
-            throw new IllegalArgumentException("Entity or ID is null");
+            throw new CustomIllegalArgumentException("Неверные данные для обновления клиента");
         }
         clientRepository.save(clientEntityMapper.toEntity(dto));
     }
