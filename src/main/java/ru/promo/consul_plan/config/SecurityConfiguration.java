@@ -19,8 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import ru.promo.consul_plan.service.AccountService;
 import ru.promo.consul_plan.service.AuthenticationFilter;
 
-import java.util.List;
-
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -31,26 +29,22 @@ public class SecurityConfiguration {
 
     private final AuthenticationFilter authenticationFilter;
     private final AccountService accountService;
+    private final SecurityProperties securityProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(List.of("*"));
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfiguration.setAllowedHeaders(List.of("*"));
-                    corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setAllowedOriginPatterns(securityProperties.getAllowedOriginPatterns());
+                    corsConfiguration.setAllowedMethods(securityProperties.getAllowedMethods());
+                    corsConfiguration.setAllowedHeaders(securityProperties.getAllowedHeaders());
+                    corsConfiguration.setAllowCredentials(securityProperties.getAllowCredentials());
                     return corsConfiguration;
                 }))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // Разрешить доступ к Swagger UI для всех
-                        //.requestMatchers( "/admin").hasRole("ADMIN")
-                        //.requestMatchers( "/specialist").hasRole("SPECIALIST")
-                        .anyRequest().authenticated())
+                        .requestMatchers(securityProperties.getPermitAllEndpoints().toArray(new String[0])).permitAll()
+                        .requestMatchers(securityProperties.getAuthenticatedEndpoints().toArray(new String[0])).authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
