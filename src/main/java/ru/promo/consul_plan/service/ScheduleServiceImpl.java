@@ -2,11 +2,11 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
+import ru.promo.consul_plan.exception.NotFoundException;
 import ru.promo.consul_plan.mapper.ScheduleMapper;
 import ru.promo.consul_plan.repository.ScheduleRepository;
 
@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleMapper scheduleMapper;
 
     @Override
-    public void create(Schedule dto) throws ChangeSetPersister.NotFoundException {
+    public void create(Schedule dto) {
         SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
 
         ScheduleEntity entity = new ScheduleEntity();
@@ -39,17 +40,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public Schedule getDTOById(Long id) {
-        return scheduleMapper.toDTO(scheduleRepository.findById(id).orElse(null));
+        return scheduleMapper.toDTO(scheduleRepository.findById(id).orElseThrow(() -> new NotFoundException("Schedule not found with id: " + id)));
     }
 
     @Override
-    public ScheduleEntity getById(Long id) {
-        return scheduleRepository.findById(id).orElse(null);
+    public Optional<ScheduleEntity> getById(Long id) {
+        return scheduleRepository.findById(id);
     }
 
 
     @Override
-    public void update(Schedule dto) throws ChangeSetPersister.NotFoundException {
+    public void update(Schedule dto) {
         if (scheduleRepository.existsById(dto.getId())) {
             SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
 

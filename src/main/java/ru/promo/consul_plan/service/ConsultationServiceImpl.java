@@ -2,10 +2,10 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.entity.*;
+import ru.promo.consul_plan.exception.NotFoundException;
 import ru.promo.consul_plan.mapper.ConsultationEntityMapper;
 import ru.promo.consul_plan.mapper.ConsultationMapper;
 import ru.promo.consul_plan.repository.ConsultationRepository;
@@ -34,16 +34,26 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
+    public void update(ConsultationEntity entity) {
+        consultationRepository.save(entity);
+    }
+
+
+    @Override
+    @Transactional
     public ConsultationEntity getById(Long id) {
-        return consultationRepository.findById(id).orElse(null);
+        return consultationRepository.findById(id).orElseThrow(() -> new NotFoundException("Consultation not found with id: " + id));
     }
 
     @Override
     @Transactional
-    public Consultation reserveConsultation(Long scheduleId, Long clientId) throws ChangeSetPersister.NotFoundException {
+    public Consultation reserveConsultation(Long scheduleId, Long clientId) {
 
-        var schedule = scheduleService.getById(scheduleId);
-        var client = clientService.getEntityById(clientId);
+        var client = clientService.getEntityById(clientId)
+                .orElseThrow(() -> new NotFoundException("Client not found with id: " + clientId));
+        var schedule = scheduleService.getById(scheduleId)
+                .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + scheduleId));
+
 
         ConsultationEntity consultation = new ConsultationEntity();
 
@@ -83,8 +93,9 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     @Override
     @Transactional
-    public Consultation confirmConsultation(Long consultationId) throws ChangeSetPersister.NotFoundException {
-        ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
+    public Consultation confirmConsultation(Long consultationId) {
+        ConsultationEntity consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
         if (consultation != null) {
             consultation.setStatus(TypeStatus.CONFORMED);
             ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
@@ -106,7 +117,8 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     @Transactional
     public Consultation cancelConsultation(Long consultationId) {
-        ConsultationEntity consultation = consultationRepository.findById(consultationId).orElse(null);
+        ConsultationEntity consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
         if (consultation != null) {
             consultation.setStatus(TypeStatus.CANCELLED);
             ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
@@ -128,27 +140,4 @@ public class ConsultationServiceImpl implements ConsultationService {
         }
         return null;
     }
-
-    //TODO
-    // автоматические напоминания, будет доделано после
-    /*
-    @Scheduled(cron = "0 0 12 * * ?") // Запускать каждый день в 12:00
-    public void sendDailyReminders() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime tomorrow = now.plusDays(1);
-
-        List<ScheduleEntity> entities = scheduleService.findAllByDateTimeBetween(tomorrow.toLocalDate());
-
-        for (ScheduleEntity entity : entities) {
-            var consultations = consultationRepository.findByClientId(entity.getClient().getId());
-            for (ConsultationEntity consultation : consultations) {
-                if (consultation.getStatus() == TypeStatus.CONFORMED) {
-                    notificationService.sendReminder(consultation);
-                    consultation.setReminderSent(true);
-                }
-            }
-        }
-    }
-
-     */
 }

@@ -2,10 +2,11 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Specialist;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
+import ru.promo.consul_plan.exception.CustomIllegalArgumentException;
+import ru.promo.consul_plan.exception.NotFoundException;
 import ru.promo.consul_plan.mapper.SpecialistEntityMapper;
 import ru.promo.consul_plan.mapper.SpecialistMapper;
 import ru.promo.consul_plan.repository.SpecialistRepository;
@@ -25,7 +26,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Transactional
     public void create(Specialist dto) {
         if (dto == null) {
-            throw new IllegalArgumentException("Entity is null");
+            throw new CustomIllegalArgumentException("Недостаточно данных для создания специалиста");
         }
 
         var entity = specialistEntityMapper.toEntity(dto);
@@ -37,23 +38,23 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Transactional
     public void create(SpecialistEntity entity) {
         if (entity == null) {
-            throw new IllegalArgumentException("Entity is null");
+            throw new CustomIllegalArgumentException("Недостаточно данных для создания специалиста");
         }
         specialistRepository.save(entity);
     }
 
     @Override
     @Transactional
-    public SpecialistEntity getById(Long id) throws ChangeSetPersister.NotFoundException {
+    public SpecialistEntity getById(Long id) {
         return specialistRepository.findById(id)
-                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+                .orElseThrow(() -> new NotFoundException("Specialist not found with id: " + id));
     }
 
     @Override
     @Transactional
     public void update(Specialist dto) {
         if (dto == null || dto.getId() == null) {
-            throw new IllegalArgumentException("Entity or ID is null");
+            throw new CustomIllegalArgumentException("Недостаточно данных для обновления специалиста");
         }
         specialistRepository.save(specialistEntityMapper.toEntity(dto));
     }

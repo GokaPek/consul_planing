@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Schedule {
     private Long id;
     private Long specialistId;
+    private Long clientId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }

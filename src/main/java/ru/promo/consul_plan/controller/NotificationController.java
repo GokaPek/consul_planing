@@ -2,7 +2,6 @@ package ru.promo.consul_plan.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.promo.consul_plan.domain.Notification;
@@ -62,7 +61,7 @@ public class NotificationController implements NotificationApi {
     }
 
     @Override
-    public ResponseEntity<Void> sendReminder(Long consultationId) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Void> sendReminder(Long consultationId) {
         log.info("Send reminder for consultation ID: {}", consultationId);
         var consultation = consultationService.getById(consultationId);
         notificationService.sendReminder(consultation);

@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.entity.AccountEntity;
+import ru.promo.consul_plan.exception.CustomRuntimeException;
 import ru.promo.consul_plan.repository.AccountRepository;
 
 @Service
@@ -21,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountEntity create(AccountEntity user) {
         if (repository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new CustomRuntimeException("Пользователь с таким именем уже существует");
         }
 
         return save(user);

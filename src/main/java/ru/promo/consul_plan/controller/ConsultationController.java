@@ -2,7 +2,6 @@ package ru.promo.consul_plan.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.promo.consul_plan.domain.Consultation;
@@ -18,7 +17,7 @@ public class ConsultationController implements ConsultationApi {
     private final ConsultationService consultationService;
 
     @Override
-    public ResponseEntity<Consultation> reserveConsultation(Long clientId, Long scheduleId) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Consultation> reserveConsultation(Long clientId, Long scheduleId) {
         log.info("Reserve consultation for client {} and schedule {}", clientId, scheduleId);
         Consultation reservedConsultation = consultationService.reserveConsultation(scheduleId, clientId);
         return ResponseEntity.ok(reservedConsultation);
@@ -39,7 +38,7 @@ public class ConsultationController implements ConsultationApi {
     }
 
     @Override
-    public ResponseEntity<Consultation> confirmConsultation(Long consultationId) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<Consultation> confirmConsultation(Long consultationId) {
         log.info("Confirm consultation with ID {}", consultationId);
         Consultation confirmedConsultation = consultationService.confirmConsultation(consultationId);
         return ResponseEntity.ok(confirmedConsultation);
