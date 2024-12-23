@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Schedule;
@@ -21,7 +23,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Получить расписание по ID")
     @GetMapping("/{id}")
-    ResponseEntity<Schedule> getScheduleById(@Parameter(description = "ID расписания") @PathVariable(name = "id") Long id);
+    ResponseEntity<Schedule> getScheduleById(@Parameter(description = "ID расписания") @PathVariable(name = "id") @NotNull @Positive Long id);
 
     @Operation(summary = "Обновить расписание")
     @PutMapping
@@ -29,11 +31,11 @@ public interface ScheduleApi {
 
     @Operation(summary = "Удалить расписание")
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteSchedule(@Parameter(description = "ID расписания") @PathVariable(name = "id") Long id);
+    ResponseEntity<Void> deleteSchedule(@Parameter(description = "ID расписания") @PathVariable(name = "id") @NotNull @Positive Long id);
 
     @Operation(summary = "Получить все расписания специалиста")
     @GetMapping("/specialist/{specialistId}")
-    ResponseEntity<List<Schedule>> getSchedulesBySpecialistId(@Parameter(description = "ID специалиста") @PathVariable(name = "specialistId") Long specialistId);
+    ResponseEntity<List<Schedule>> getSchedulesBySpecialistId(@Parameter(description = "ID специалиста") @PathVariable(name = "specialistId") @NotNull @Positive Long specialistId);
 
     @Operation(summary = "Получить всех специалистов")
     @GetMapping("/specialists")
