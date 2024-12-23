@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +21,13 @@ public interface SecurityAccountApi {
     @ApiResponse(responseCode = "200", description = "Пользователь успешно зарегистрирован")
     @PostMapping("/sign-up")
     TokenResponse signUp(
-            @Parameter(description = "Данные для регистрации пользователя") @Valid @RequestBody
+            @Parameter(description = "Данные для регистрации пользователя") @Valid @RequestBody @NotNull
             SignUpRequest request);
 
     @Operation(summary = "Авторизация пользователя")
     @ApiResponse(responseCode = "200", description = "Пользователь успешно авторизован")
     @PostMapping("/sign-in")
     TokenResponse signIn(
-            @Parameter(description = "Данные для авторизации пользователя") @Valid @RequestBody
+            @Parameter(description = "Данные для авторизации пользователя") @Valid @RequestBody @NotNull
             SignInRequest request);
 }

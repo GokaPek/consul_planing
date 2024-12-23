@@ -19,7 +19,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Создать расписание")
     @PostMapping
-    ResponseEntity<Void> createSchedule(@Valid @Parameter(description = "Параметры для создания расписания") @RequestBody Schedule schedule);
+    ResponseEntity<Void> createSchedule(@Valid @Parameter(description = "Параметры для создания расписания") @RequestBody @NotNull Schedule schedule);
 
     @Operation(summary = "Получить расписание по ID")
     @GetMapping("/{id}")
@@ -27,7 +27,7 @@ public interface ScheduleApi {
 
     @Operation(summary = "Обновить расписание")
     @PutMapping
-    ResponseEntity<Void> updateSchedule(@Valid @Parameter(description = "Параметры для обновления расписания") @RequestBody Schedule schedule);
+    ResponseEntity<Void> updateSchedule(@Valid @Parameter(description = "Параметры для обновления расписания") @RequestBody @NotNull Schedule schedule);
 
     @Operation(summary = "Удалить расписание")
     @DeleteMapping("/{id}")

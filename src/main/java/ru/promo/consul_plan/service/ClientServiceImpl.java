@@ -25,9 +25,6 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public void create(ClientEntity entity) {
-        if (entity == null) {
-            throw new CustomIllegalArgumentException("Недостаточно данных для создания клиента");
-        }
         clientRepository.save(entity);
     }
 
