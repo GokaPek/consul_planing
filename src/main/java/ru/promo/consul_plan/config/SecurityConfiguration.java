@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import ru.promo.consul_plan.config.properties.SecurityProperties;
 import ru.promo.consul_plan.service.AccountService;
 import ru.promo.consul_plan.service.AuthenticationFilter;
 
