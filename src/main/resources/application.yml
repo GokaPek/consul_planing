@@ -26,6 +26,26 @@ spring:
           auth: true
           starttls:
             enable: true
+security:
+  config:
+    allowed-origin-patterns: "*"
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed-headers: "*"
+    allow-credentials: true
+    permit-all-endpoints:
+      - "/auth/**"
+      - "/admin/**"
+      - "/api/**"
+      - "/swagger-ui.html"
+      - "/swagger-ui/**"
+      - "/v3/api-docs/**"
+    authenticated-endpoints:
+      - "/**"
 reminder:
   scheduler:
     enabled: true
