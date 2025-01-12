@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.Specialist;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "Schedule API", description = "API для управления расписаниями")
@@ -41,7 +42,7 @@ public interface ScheduleApi {
     @GetMapping("/specialists")
     ResponseEntity<List<Specialist>> getAllSpecialists();
 
-    @Operation(summary = "Получить все расписания")
+    @Operation(summary = "Получить все расписания по дате")
     @GetMapping
-    ResponseEntity<List<Schedule>> getAllSchedule();
+    ResponseEntity<List<Schedule>> getSchedulesByDate(@RequestParam LocalDate date);
 }

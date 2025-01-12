@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Consultation;
+import ru.promo.consul_plan.domain.ConsultationDetails;
 
 import java.util.List;
 
@@ -43,4 +41,12 @@ public interface ConsultationApi {
     @PostMapping("/cancel/{consultationId}")
     ResponseEntity<Consultation> cancelConsultation(
             @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") @NotNull @Positive Long consultationId);
+
+    @Operation(summary = "Получение деталей консультации")
+    @GetMapping("/{consultationId}/details")
+    ConsultationDetails getConsultationDetails(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
+
+    @Operation(summary = "Пометка что уведомление о консультации отослано")
+    @PutMapping("/{consultationId}/mark-reminder-sent")
+    ResponseEntity<Void> markReminderSent(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 }
