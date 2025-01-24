@@ -65,12 +65,6 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.RESERVED);
         ConsultationEntity reservedConsultation = consultationRepository.save(consultation);
 
-        // Отправка уведомления через микросервис уведомлений
-        notificationClient.sendReminder(
-                new SendReminderRequest(reservedConsultation.getId(),
-                        reservedConsultation.getClient().getAccountEntity().getUsername(),
-                        reservedConsultation.getSpecialist().getAccountEntity().getUsername())
-        );
 
         // Резервирование расписания
         schedule.setClient(client);
@@ -97,7 +91,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         ConsultationEntity consultation = consultationRepository.findById(consultationId)
                 .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
 
-        consultation.setStatus(TypeStatus.CONFORMED);
+        consultation.setStatus(TypeStatus.CONFIRMED);
         ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
         // Отправка уведомления через микросервис уведомлений
@@ -122,8 +116,8 @@ public class ConsultationServiceImpl implements ConsultationService {
         // Отправка уведомления через микросервис уведомлений
         notificationClient.sendReminder(new SendReminderRequest(
                 cancelledConsultation.getId(),
-                cancelledConsultation.getClient().getAccountEntity().getUsername(),
-                cancelledConsultation.getSpecialist().getAccountEntity().getUsername()
+                cancelledConsultation.getClient().getAccountEntity().getUsername(), // clientEmail
+                cancelledConsultation.getSpecialist().getAccountEntity().getUsername() // specialistEmail
         ));
 
         // Освобождение расписания
