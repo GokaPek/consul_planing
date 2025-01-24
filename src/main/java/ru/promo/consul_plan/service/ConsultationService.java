@@ -21,4 +21,6 @@ public interface ConsultationService {
     Consultation confirmConsultation(Long consultationId);
 
     Consultation cancelConsultation(Long consultationId);
+
+    void markReminderSent(Long consultationId);
 }

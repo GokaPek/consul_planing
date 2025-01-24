@@ -3,14 +3,17 @@ package ru.promo.consul_plan.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.promo.consul_plan.client.NotificationClient;
 import ru.promo.consul_plan.domain.Consultation;
-import ru.promo.consul_plan.domain.entity.*;
+import ru.promo.consul_plan.domain.SendReminderRequest;
+import ru.promo.consul_plan.domain.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.ScheduleEntity;
+import ru.promo.consul_plan.domain.entity.TypeStatus;
 import ru.promo.consul_plan.exception.NotFoundException;
 import ru.promo.consul_plan.mapper.ConsultationEntityMapper;
 import ru.promo.consul_plan.mapper.ConsultationMapper;
 import ru.promo.consul_plan.repository.ConsultationRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,12 +22,13 @@ public class ConsultationServiceImpl implements ConsultationService {
 
     private final ConsultationRepository consultationRepository;
 
-    private final NotificationService notificationService;
     private final ScheduleService scheduleService;
     private final ClientService clientService;
 
     private final ConsultationMapper consultationMapper;
     private final ConsultationEntityMapper consultationEntityMapper;
+
+    private final NotificationClient notificationClient;
 
     @Override
     @Transactional
@@ -48,15 +52,12 @@ public class ConsultationServiceImpl implements ConsultationService {
     @Override
     @Transactional
     public Consultation reserveConsultation(Long scheduleId, Long clientId) {
-
         var client = clientService.getEntityById(clientId)
                 .orElseThrow(() -> new NotFoundException("Client not found with id: " + clientId));
         var schedule = scheduleService.getById(scheduleId)
                 .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + scheduleId));
 
-
         ConsultationEntity consultation = new ConsultationEntity();
-
         consultation.setClient(client);
         consultation.setSchedule(schedule);
         consultation.setSpecialist(schedule.getSpecialist());
@@ -64,16 +65,15 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.RESERVED);
         ConsultationEntity reservedConsultation = consultationRepository.save(consultation);
 
-        // Создание уведомления о резервировании консультации
-        NotificationEntity notification = new NotificationEntity();
-        notification.setConsultation(reservedConsultation);
-        notification.setType(TypeStatus.RESERVED);
-        notification.setSentDateTime(LocalDateTime.now());
-        notification.setStatus(NotificationType.SENT);
-        notificationService.create(notification);
+        // Отправка уведомления через микросервис уведомлений
+        notificationClient.sendReminder(
+                new SendReminderRequest(reservedConsultation.getId(),
+                        reservedConsultation.getClient().getAccountEntity().getUsername(),
+                        reservedConsultation.getSpecialist().getAccountEntity().getUsername())
+        );
 
+        // Резервирование расписания
         schedule.setClient(client);
-
         scheduleService.update(schedule);
 
         return consultationMapper.toDTO(reservedConsultation);
@@ -96,22 +96,18 @@ public class ConsultationServiceImpl implements ConsultationService {
     public Consultation confirmConsultation(Long consultationId) {
         ConsultationEntity consultation = consultationRepository.findById(consultationId)
                 .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
-        if (consultation != null) {
-            consultation.setStatus(TypeStatus.CONFORMED);
-            ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
-            // Создание уведомления о подтверждении консультации
-            NotificationEntity notification = new NotificationEntity();
-            notification.setConsultation(confirmedConsultation);
-            notification.setType(TypeStatus.CONFORMED);
-            notification.setSentDateTime(LocalDateTime.now());
-            notification.setStatus(NotificationType.SENT);
-            notificationService.create(notification);
-            notificationService.sendReminder(consultation);
+        consultation.setStatus(TypeStatus.CONFORMED);
+        ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
-            return consultationMapper.toDTO(confirmedConsultation);
-        }
-        return null;
+        // Отправка уведомления через микросервис уведомлений
+        notificationClient.sendReminder(new SendReminderRequest(
+                confirmedConsultation.getId(),
+                confirmedConsultation.getClient().getAccountEntity().getUsername(),
+                confirmedConsultation.getSpecialist().getAccountEntity().getUsername()
+        ));
+
+        return consultationMapper.toDTO(confirmedConsultation);
     }
 
     @Override
@@ -119,25 +115,31 @@ public class ConsultationServiceImpl implements ConsultationService {
     public Consultation cancelConsultation(Long consultationId) {
         ConsultationEntity consultation = consultationRepository.findById(consultationId)
                 .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
-        if (consultation != null) {
-            consultation.setStatus(TypeStatus.CANCELLED);
-            ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
-            // Создание уведомления об отмене консультации
-            NotificationEntity notification = new NotificationEntity();
-            notification.setConsultation(cancelledConsultation);
-            notification.setType(TypeStatus.CANCELLED);
-            notification.setSentDateTime(LocalDateTime.now());
-            notification.setStatus(NotificationType.SENT);
-            notificationService.create(notification);
+        consultation.setStatus(TypeStatus.CANCELLED);
+        ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
-            ScheduleEntity schedule = consultation.getSchedule();
-            schedule.setClient(null);
+        // Отправка уведомления через микросервис уведомлений
+        notificationClient.sendReminder(new SendReminderRequest(
+                cancelledConsultation.getId(),
+                cancelledConsultation.getClient().getAccountEntity().getUsername(),
+                cancelledConsultation.getSpecialist().getAccountEntity().getUsername()
+        ));
 
-            scheduleService.update(schedule);
+        // Освобождение расписания
+        ScheduleEntity schedule = consultation.getSchedule();
+        schedule.setClient(null);
+        scheduleService.update(schedule);
 
-            return consultationMapper.toDTO(cancelledConsultation);
-        }
-        return null;
+        return consultationMapper.toDTO(cancelledConsultation);
+    }
+
+
+    @Override
+    public void markReminderSent(Long consultationId) {
+        ConsultationEntity consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new NotFoundException("Consultation not found"));
+        consultation.setReminderSent(true);
+        consultationRepository.save(consultation);
     }
 }

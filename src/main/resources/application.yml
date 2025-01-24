@@ -15,17 +15,12 @@ spring:
       hibernate:
         format_sql: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: testfist24@gmail.com
-    password: xyoj cvkf evum nhmy
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+feign:
+  client:
+    config:
+      notification-service:
+        url: http://localhost:8181
+
 security:
   config:
     allowed-origin-patterns: "*"
@@ -46,10 +41,6 @@ security:
       - "/v3/api-docs/**"
     authenticated-endpoints:
       - "/**"
-reminder:
-  scheduler:
-    enabled: true
-    cron: "0 0 12 * * ?"
 logging:
   file:
     name: logs/app.log
