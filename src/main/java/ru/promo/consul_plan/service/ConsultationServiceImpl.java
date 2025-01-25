@@ -94,10 +94,11 @@ public class ConsultationServiceImpl implements ConsultationService {
         ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
         // Отправка события в Kafka
-        String event = String.format("{\"consultationId\": %d, \"clientEmail\": \"%s\", \"specialistEmail\": \"%s\"}",
+        String event = String.format("{\"consultationId\": %d, \"clientEmail\": \"%s\", \"specialistEmail\": \"%s\", \"consultationDate\": \"%s\"}",
                 confirmedConsultation.getId(),
                 confirmedConsultation.getClient().getAccountEntity().getUsername(),
-                confirmedConsultation.getSpecialist().getAccountEntity().getUsername());
+                confirmedConsultation.getSpecialist().getAccountEntity().getUsername(),
+                confirmedConsultation.getSchedule().getStartTime().toLocalDate());
         kafkaTemplate.send("consultation-confirmed", event);
 
         return consultationMapper.toDTO(confirmedConsultation);
@@ -113,10 +114,11 @@ public class ConsultationServiceImpl implements ConsultationService {
         ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
         // Отправка события в Kafka
-        String event = String.format("{\"consultationId\": %d, \"clientEmail\": \"%s\", \"specialistEmail\": \"%s\"}",
+        String event = String.format("{\"consultationId\": %d, \"clientEmail\": \"%s\", \"specialistEmail\": \"%s\", \"consultationDate\": \"%s\"}",
                 cancelledConsultation.getId(),
                 cancelledConsultation.getClient().getAccountEntity().getUsername(),
-                cancelledConsultation.getSpecialist().getAccountEntity().getUsername());
+                cancelledConsultation.getSpecialist().getAccountEntity().getUsername(),
+                cancelledConsultation.getSchedule().getStartTime().toLocalDate());
         kafkaTemplate.send("consultation-cancelled", event);
 
         // Освобождение расписания
