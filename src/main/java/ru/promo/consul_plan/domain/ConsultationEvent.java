@@ -1,13 +1,13 @@
 package ru.promo.consul_plan.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-public class ConsultationDetails {
+public class ConsultationEvent {
     private Long consultationId;
     private String clientEmail;
     private String specialistEmail;
+    private LocalDate consultationDate;
 }
 

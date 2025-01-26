@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Consultation;
+import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.domain.entity.TypeStatus;
@@ -27,7 +28,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     private final ConsultationMapper consultationMapper;
     private final ConsultationEntityMapper consultationEntityMapper;
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
     @Transactional
@@ -91,17 +92,17 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
 
         consultation.setStatus(TypeStatus.CONFORMED);
-        ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
+        consultation = consultationRepository.save(consultation);
 
-        // Отправка события в Kafka
-        String event = String.format("{\"consultationId\": %d, \"clientEmail\": \"%s\", \"specialistEmail\": \"%s\", \"consultationDate\": \"%s\"}",
-                confirmedConsultation.getId(),
-                confirmedConsultation.getClient().getAccountEntity().getUsername(),
-                confirmedConsultation.getSpecialist().getAccountEntity().getUsername(),
-                confirmedConsultation.getSchedule().getStartTime().toLocalDate());
-        kafkaTemplate.send("consultation-confirmed", event);
+        ConsultationEvent event = new ConsultationEvent();
+        event.setConsultationId(consultation.getId());
+        event.setClientEmail(consultation.getClient().getAccountEntity().getUsername());
+        event.setSpecialistEmail(consultation.getSpecialist().getAccountEntity().getUsername());
+        event.setConsultationDate(consultation.getSchedule().getStartTime().toLocalDate());
 
-        return consultationMapper.toDTO(confirmedConsultation);
+        kafkaTemplate.send("consultation-topic", event);
+
+        return consultationMapper.toDTO(consultation);
     }
 
     @Override
@@ -113,15 +114,14 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.CANCELLED);
         ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
-        // Отправка события в Kafka
-        String event = String.format("{\"consultationId\": %d, \"clientEmail\": \"%s\", \"specialistEmail\": \"%s\", \"consultationDate\": \"%s\"}",
-                cancelledConsultation.getId(),
-                cancelledConsultation.getClient().getAccountEntity().getUsername(),
-                cancelledConsultation.getSpecialist().getAccountEntity().getUsername(),
-                cancelledConsultation.getSchedule().getStartTime().toLocalDate());
-        kafkaTemplate.send("consultation-cancelled", event);
+        ConsultationEvent event = new ConsultationEvent();
+        event.setConsultationId(cancelledConsultation.getId());
+        event.setClientEmail(cancelledConsultation.getClient().getAccountEntity().getUsername());
+        event.setSpecialistEmail(cancelledConsultation.getSpecialist().getAccountEntity().getUsername());
+        event.setConsultationDate(cancelledConsultation.getSchedule().getStartTime().toLocalDate());
 
-        // Освобождение расписания
+        kafkaTemplate.send("consultation-topic", event);
+
         ScheduleEntity schedule = consultation.getSchedule();
         schedule.setClient(null);
         scheduleService.update(schedule);

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.promo.consul_plan.domain.Consultation;
-import ru.promo.consul_plan.domain.ConsultationDetails;
+import ru.promo.consul_plan.domain.ConsultationEvent;
 
 import java.util.List;
 
@@ -41,10 +41,6 @@ public interface ConsultationApi {
     @PostMapping("/cancel/{consultationId}")
     ResponseEntity<Consultation> cancelConsultation(
             @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") @NotNull @Positive Long consultationId);
-
-    @Operation(summary = "Получение деталей консультации")
-    @GetMapping("/{consultationId}/details")
-    ConsultationDetails getConsultationDetails(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 
     @Operation(summary = "Пометка что уведомление о консультации отослано")
     @PutMapping("/{consultationId}/mark-reminder-sent")

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.promo.consul_plan.domain.Consultation;
-import ru.promo.consul_plan.domain.ConsultationDetails;
+import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.service.ConsultationService;
 
@@ -51,17 +51,6 @@ public class ConsultationController implements ConsultationApi {
         log.info("Cancel consultation with ID {}", consultationId);
         Consultation cancelledConsultation = consultationService.cancelConsultation(consultationId);
         return ResponseEntity.ok(cancelledConsultation);
-    }
-
-    @Override
-    public ConsultationDetails getConsultationDetails(Long consultationId) {
-        log.info("Get details for consultation with ID {}", consultationId);
-        ConsultationEntity consultation = consultationService.getById(consultationId);
-        return new ConsultationDetails(
-                consultation.getId(),
-                consultation.getClient().getAccountEntity().getUsername(),
-                consultation.getSpecialist().getAccountEntity().getUsername()
-        );
     }
 
     @Override
