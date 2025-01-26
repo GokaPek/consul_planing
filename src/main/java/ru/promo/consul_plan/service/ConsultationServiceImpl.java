@@ -92,17 +92,17 @@ public class ConsultationServiceImpl implements ConsultationService {
                 .orElseThrow(() -> new NotFoundException("Consultation not found with id: " + consultationId));
 
         consultation.setStatus(TypeStatus.CONFORMED);
-        consultation = consultationRepository.save(consultation);
+        ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
         ConsultationEvent event = new ConsultationEvent();
-        event.setConsultationId(consultation.getId());
-        event.setClientEmail(consultation.getClient().getAccountEntity().getUsername());
-        event.setSpecialistEmail(consultation.getSpecialist().getAccountEntity().getUsername());
-        event.setConsultationDate(consultation.getSchedule().getStartTime().toLocalDate());
+        event.setConsultationId(confirmedConsultation.getId());
+        event.setClientEmail(confirmedConsultation.getClient().getAccountEntity().getUsername());
+        event.setSpecialistEmail(confirmedConsultation.getSpecialist().getAccountEntity().getUsername());
+        event.setConsultationDate(confirmedConsultation.getSchedule().getStartTime().toLocalDate());
 
         kafkaTemplate.send("consultation-topic", event);
 
-        return consultationMapper.toDTO(consultation);
+        return consultationMapper.toDTO(confirmedConsultation);
     }
 
     @Override
