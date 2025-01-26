@@ -61,7 +61,6 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setClient(client);
         consultation.setSchedule(schedule);
         consultation.setSpecialist(schedule.getSpecialist());
-        consultation.setReminderSent(false);
         consultation.setStatus(TypeStatus.RESERVED);
         ConsultationEntity reservedConsultation = consultationRepository.save(consultation);
 
@@ -99,8 +98,9 @@ public class ConsultationServiceImpl implements ConsultationService {
         event.setClientEmail(confirmedConsultation.getClient().getAccountEntity().getUsername());
         event.setSpecialistEmail(confirmedConsultation.getSpecialist().getAccountEntity().getUsername());
         event.setConsultationDate(confirmedConsultation.getSchedule().getStartTime().toLocalDate());
+        event.setStatus(TypeStatus.CONFORMED);
 
-        kafkaTemplate.send("consultation-topic", event);
+        sendConsultationEvent(event, consultation);
 
         return consultationMapper.toDTO(confirmedConsultation);
     }
@@ -119,8 +119,9 @@ public class ConsultationServiceImpl implements ConsultationService {
         event.setClientEmail(cancelledConsultation.getClient().getAccountEntity().getUsername());
         event.setSpecialistEmail(cancelledConsultation.getSpecialist().getAccountEntity().getUsername());
         event.setConsultationDate(cancelledConsultation.getSchedule().getStartTime().toLocalDate());
+        event.setStatus(TypeStatus.CANCELLED);
 
-        kafkaTemplate.send("consultation-topic", event);
+        sendConsultationEvent(event, consultation);
 
         ScheduleEntity schedule = consultation.getSchedule();
         schedule.setClient(null);
@@ -129,12 +130,14 @@ public class ConsultationServiceImpl implements ConsultationService {
         return consultationMapper.toDTO(cancelledConsultation);
     }
 
-
-    @Override
-    public void markReminderSent(Long consultationId) {
-        ConsultationEntity consultation = consultationRepository.findById(consultationId)
-                .orElseThrow(() -> new NotFoundException("Consultation not found"));
-        consultation.setReminderSent(true);
-        consultationRepository.save(consultation);
+    private void sendConsultationEvent(ConsultationEvent event, ConsultationEntity consultation) {
+        kafkaTemplate.send("consultation-topic", event).whenComplete((result, ex) -> {
+            if (ex == null) {
+                consultation.setNotificationCreated(true);
+            } else {
+                consultation.setNotificationCreated(false);
+            }
+            consultationRepository.save(consultation);
+        });
     }
 }

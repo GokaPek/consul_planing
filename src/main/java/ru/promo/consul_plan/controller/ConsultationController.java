@@ -52,11 +52,4 @@ public class ConsultationController implements ConsultationApi {
         Consultation cancelledConsultation = consultationService.cancelConsultation(consultationId);
         return ResponseEntity.ok(cancelledConsultation);
     }
-
-    @Override
-    public ResponseEntity<Void> markReminderSent(Long consultationId) {
-        log.info("Mark reminder sent for consultation with ID {}", consultationId);
-        consultationService.markReminderSent(consultationId);
-        return ResponseEntity.noContent().build();
-    }
 }

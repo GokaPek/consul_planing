@@ -41,8 +41,4 @@ public interface ConsultationApi {
     @PostMapping("/cancel/{consultationId}")
     ResponseEntity<Consultation> cancelConsultation(
             @Parameter(description = "ID консультации") @PathVariable(name = "consultationId") @NotNull @Positive Long consultationId);
-
-    @Operation(summary = "Пометка что уведомление о консультации отослано")
-    @PutMapping("/{consultationId}/mark-reminder-sent")
-    ResponseEntity<Void> markReminderSent(@Parameter(description = "ID консультации") @PathVariable(name = "consultationId") Long consultationId);
 }

@@ -8,14 +8,10 @@ import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import java.util.List;
 
 public interface ConsultationRepository extends JpaRepository<ConsultationEntity, Long> {
-    @Query("SELECT c FROM ConsultationEntity c WHERE c.status = :status")
-    List<ConsultationEntity> findByStatus(@Param("status") String status);
 
-    @Query("SELECT c FROM ConsultationEntity c WHERE c.client.id = :clientId")
     List<ConsultationEntity> findByClientId(@Param("clientId") Long clientId);
 
-    @Query("SELECT c FROM ConsultationEntity c WHERE c.specialist.id = :specialistId")
     List<ConsultationEntity> findBySpecialistId(@Param("specialistId") Long specialistId);
 
-    List<ConsultationEntity> findAllByClientId(Long clientId);
+    List<ConsultationEntity> findByNotificationCreatedFalse();
 }
