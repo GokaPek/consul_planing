@@ -31,7 +31,7 @@ public class RetryNotificationScheduler {
 
         do {
             consultations = consultationService.getNotificationCreatedFalse(page, size);
-            for (ConsultationEntity consultation : consultations) {
+            consultations.forEach(consultation -> {
                 ConsultationEvent event = consultationService.createConsultationEvent(consultation);
 
                 kafkaTemplate.send("consultation-topic", event).whenComplete((result, ex) -> {
@@ -43,7 +43,7 @@ public class RetryNotificationScheduler {
                     }
                     consultationService.update(consultation);
                 });
-            }
+            });
             page++;
         } while (!consultations.isEmpty());
 
