@@ -2,6 +2,8 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.promo.consul_plan.domain.Consultation;
@@ -93,11 +95,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.CONFORMED);
         ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
-        ConsultationEvent event = new ConsultationEvent();
-        event.setConsultationId(confirmedConsultation.getId());
-        event.setClientEmail(confirmedConsultation.getClient().getAccountEntity().getUsername());
-        event.setSpecialistEmail(confirmedConsultation.getSpecialist().getAccountEntity().getUsername());
-        event.setConsultationDate(confirmedConsultation.getSchedule().getStartTime().toLocalDate());
+        ConsultationEvent event = createConsultationEvent(confirmedConsultation);
         event.setStatus(TypeStatus.CONFORMED);
 
         sendConsultationEvent(event, consultation);
@@ -114,11 +112,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.CANCELLED);
         ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
-        ConsultationEvent event = new ConsultationEvent();
-        event.setConsultationId(cancelledConsultation.getId());
-        event.setClientEmail(cancelledConsultation.getClient().getAccountEntity().getUsername());
-        event.setSpecialistEmail(cancelledConsultation.getSpecialist().getAccountEntity().getUsername());
-        event.setConsultationDate(cancelledConsultation.getSchedule().getStartTime().toLocalDate());
+        ConsultationEvent event = createConsultationEvent(cancelledConsultation);
         event.setStatus(TypeStatus.CANCELLED);
 
         sendConsultationEvent(event, consultation);
@@ -139,5 +133,20 @@ public class ConsultationServiceImpl implements ConsultationService {
             }
             consultationRepository.save(consultation);
         });
+    }
+
+    @Override
+    public Page<ConsultationEntity> getNotificationCreatedFalse(int page, int size){
+        return consultationRepository.findByNotificationCreatedFalse(PageRequest.of(page, size));
+    }
+
+    @Override
+    public ConsultationEvent createConsultationEvent(ConsultationEntity consultation) {
+        ConsultationEvent event = new ConsultationEvent();
+        event.setConsultationId(consultation.getId());
+        event.setClientEmail(consultation.getClient().getAccountEntity().getUsername());
+        event.setSpecialistEmail(consultation.getSpecialist().getAccountEntity().getUsername());
+        event.setConsultationDate(consultation.getSchedule().getStartTime().toLocalDate());
+        return event;
     }
 }
