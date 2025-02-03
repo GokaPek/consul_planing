@@ -29,7 +29,7 @@ retry:
     enabled: true
     cron: "0 */10 * * * ?"
 
-kafka:
+kafka-topic:
   consultation-topic: "consultation-topic"
 
 
