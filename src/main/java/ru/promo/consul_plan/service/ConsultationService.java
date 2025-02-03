@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
+import ru.promo.consul_plan.domain.entity.TypeStatus;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface ConsultationService {
 
     Consultation cancelConsultation(Long consultationId);
 
-    Page<ConsultationEntity> getNotificationCreatedFalse(int page, int size);
+    List<ConsultationEntity> getNotificationCreatedFalse(int page, int size);
 
-    ConsultationEvent createConsultationEvent(ConsultationEntity consultation);
+    ConsultationEvent createConsultationEvent(ConsultationEntity consultation, TypeStatus status);
 }

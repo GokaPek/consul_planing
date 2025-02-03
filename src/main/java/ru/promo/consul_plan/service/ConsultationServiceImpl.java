@@ -2,10 +2,10 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ru.promo.consul_plan.config.KafkaTopicProperties;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
@@ -31,6 +31,7 @@ public class ConsultationServiceImpl implements ConsultationService {
     private final ConsultationEntityMapper consultationEntityMapper;
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTopicProperties kafkaTopicProperties;
 
     @Override
     @Transactional
@@ -95,8 +96,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.CONFORMED);
         ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
-        ConsultationEvent event = createConsultationEvent(confirmedConsultation);
-        event.setStatus(TypeStatus.CONFORMED);
+        ConsultationEvent event = createConsultationEvent(confirmedConsultation, TypeStatus.CONFORMED);
 
         sendConsultationEvent(event, consultation);
 
@@ -112,8 +112,7 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.CANCELLED);
         ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
-        ConsultationEvent event = createConsultationEvent(cancelledConsultation);
-        event.setStatus(TypeStatus.CANCELLED);
+        ConsultationEvent event = createConsultationEvent(cancelledConsultation, TypeStatus.CANCELLED);
 
         sendConsultationEvent(event, consultation);
 
@@ -125,28 +124,25 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     private void sendConsultationEvent(ConsultationEvent event, ConsultationEntity consultation) {
-        kafkaTemplate.send("consultation-topic", event).whenComplete((result, ex) -> {
-            if (ex == null) {
-                consultation.setNotificationCreated(true);
-            } else {
-                consultation.setNotificationCreated(false);
-            }
+        kafkaTemplate.send(kafkaTopicProperties.getConsultationTopic(), event).whenComplete((result, ex) -> {
+            consultation.setNotificationCreated(ex == null);
             consultationRepository.save(consultation);
         });
     }
 
     @Override
-    public Page<ConsultationEntity> getNotificationCreatedFalse(int page, int size){
+    public List<ConsultationEntity> getNotificationCreatedFalse(int page, int size) {
         return consultationRepository.findByNotificationCreatedFalse(PageRequest.of(page, size));
     }
 
     @Override
-    public ConsultationEvent createConsultationEvent(ConsultationEntity consultation) {
+    public ConsultationEvent createConsultationEvent(ConsultationEntity consultation, TypeStatus status) {
         ConsultationEvent event = new ConsultationEvent();
         event.setConsultationId(consultation.getId());
         event.setClientEmail(consultation.getClient().getAccountEntity().getUsername());
         event.setSpecialistEmail(consultation.getSpecialist().getAccountEntity().getUsername());
         event.setConsultationDate(consultation.getSchedule().getStartTime().toLocalDate());
+        event.setStatus(status);
         return event;
     }
 }

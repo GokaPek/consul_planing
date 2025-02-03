@@ -15,5 +15,5 @@ public interface ConsultationRepository extends JpaRepository<ConsultationEntity
 
     List<ConsultationEntity> findBySpecialistId(Long specialistId);
 
-    Page<ConsultationEntity> findByNotificationCreatedFalse(Pageable page);
+    List<ConsultationEntity> findByNotificationCreatedFalse(Pageable page);
 }

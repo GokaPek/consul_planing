@@ -7,9 +7,12 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.promo.consul_plan.config.KafkaTopicProperties;
 import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.service.ConsultationService;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -18,34 +21,30 @@ public class RetryNotificationScheduler {
 
     private final ConsultationService consultationService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTopicProperties kafkaTopicProperties;
 
-    @Scheduled(fixedRate = 60000)
+    private static final int PAGE_SIZE = 50;
+
+    @Scheduled(cron = "${retry.scheduler.cron}")
     @Transactional
     public void retryFailedNotifications() {
         log.info("Starting retry for failed notifications");
 
-        int page = 0;
-        int size = 50;
+        List<ConsultationEntity> consultations;
+        consultations = consultationService.getNotificationCreatedFalse(0, PAGE_SIZE);
+        consultations.forEach(consultation -> {
+            ConsultationEvent event = consultationService.createConsultationEvent(consultation, consultation.getStatus());
 
-        Page<ConsultationEntity> consultations;
-
-        do {
-            consultations = consultationService.getNotificationCreatedFalse(page, size);
-            consultations.forEach(consultation -> {
-                ConsultationEvent event = consultationService.createConsultationEvent(consultation);
-
-                kafkaTemplate.send("consultation-topic", event).whenComplete((result, ex) -> {
-                    if (ex == null) {
-                        consultation.setNotificationCreated(true);
-                        log.info("Retry successful for consultation: ID={}", consultation.getId());
-                    } else {
-                        log.error("Retry failed for consultation: ID={}", consultation.getId(), ex);
-                    }
+            kafkaTemplate.send(kafkaTopicProperties.getConsultationTopic(), event).whenComplete((result, ex) -> {
+                if (ex == null) {
+                    consultation.setNotificationCreated(true);
+                    log.info("Retry successful for consultation: ID={}", consultation.getId());
                     consultationService.update(consultation);
-                });
+                } else {
+                    log.error("Retry failed for consultation: ID={}", consultation.getId(), ex);
+                }
             });
-            page++;
-        } while (!consultations.isEmpty());
+        });
 
         log.info("Retry for failed notifications completed");
     }

@@ -24,6 +24,15 @@ feign:
       notification-service:
         url: http://localhost:8181
 
+retry:
+  scheduler:
+    enabled: true
+    cron: "0 */10 * * * ?"
+
+kafka:
+  consultation-topic: "consultation-topic"
+
+
 security:
   config:
     allowed-origin-patterns: "*"
