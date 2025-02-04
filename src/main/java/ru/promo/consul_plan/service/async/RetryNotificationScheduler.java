@@ -2,12 +2,12 @@ package ru.promo.consul_plan.service.async;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.promo.consul_plan.config.KafkaTopicProperties;
+import ru.promo.consul_plan.config.properties.KafkaTopicProperties;
 import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.service.ConsultationService;
@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@ConditionalOnProperty
 public class RetryNotificationScheduler {
 
     private final ConsultationService consultationService;

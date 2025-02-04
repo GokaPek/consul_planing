@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.config.KafkaTopicProperties;
+import ru.promo.consul_plan.config.properties.KafkaTopicProperties;
 import ru.promo.consul_plan.domain.Consultation;
 import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
