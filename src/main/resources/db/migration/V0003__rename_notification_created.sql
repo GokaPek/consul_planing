@@ -1,0 +1,1 @@
+ALTER TABLE consultation RENAME COLUMN reminder_sent TO notification_created;

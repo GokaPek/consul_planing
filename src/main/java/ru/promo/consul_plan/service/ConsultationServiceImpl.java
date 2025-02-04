@@ -2,10 +2,12 @@ package ru.promo.consul_plan.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.promo.consul_plan.client.NotificationClient;
+import ru.promo.consul_plan.config.properties.KafkaTopicProperties;
 import ru.promo.consul_plan.domain.Consultation;
-import ru.promo.consul_plan.domain.SendReminderRequest;
+import ru.promo.consul_plan.domain.ConsultationEvent;
 import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.domain.entity.TypeStatus;
@@ -28,7 +30,8 @@ public class ConsultationServiceImpl implements ConsultationService {
     private final ConsultationMapper consultationMapper;
     private final ConsultationEntityMapper consultationEntityMapper;
 
-    private final NotificationClient notificationClient;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTopicProperties kafkaTopicProperties;
 
     @Override
     @Transactional
@@ -61,16 +64,9 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setClient(client);
         consultation.setSchedule(schedule);
         consultation.setSpecialist(schedule.getSpecialist());
-        consultation.setReminderSent(false);
         consultation.setStatus(TypeStatus.RESERVED);
         ConsultationEntity reservedConsultation = consultationRepository.save(consultation);
 
-        // Отправка уведомления через микросервис уведомлений
-        notificationClient.sendReminder(
-                new SendReminderRequest(reservedConsultation.getId(),
-                        reservedConsultation.getClient().getAccountEntity().getUsername(),
-                        reservedConsultation.getSpecialist().getAccountEntity().getUsername())
-        );
 
         // Резервирование расписания
         schedule.setClient(client);
@@ -100,12 +96,9 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.CONFORMED);
         ConsultationEntity confirmedConsultation = consultationRepository.save(consultation);
 
-        // Отправка уведомления через микросервис уведомлений
-        notificationClient.sendReminder(new SendReminderRequest(
-                confirmedConsultation.getId(),
-                confirmedConsultation.getClient().getAccountEntity().getUsername(),
-                confirmedConsultation.getSpecialist().getAccountEntity().getUsername()
-        ));
+        ConsultationEvent event = createConsultationEvent(confirmedConsultation, TypeStatus.CONFORMED);
+
+        sendConsultationEvent(event, consultation);
 
         return consultationMapper.toDTO(confirmedConsultation);
     }
@@ -119,14 +112,10 @@ public class ConsultationServiceImpl implements ConsultationService {
         consultation.setStatus(TypeStatus.CANCELLED);
         ConsultationEntity cancelledConsultation = consultationRepository.save(consultation);
 
-        // Отправка уведомления через микросервис уведомлений
-        notificationClient.sendReminder(new SendReminderRequest(
-                cancelledConsultation.getId(),
-                cancelledConsultation.getClient().getAccountEntity().getUsername(),
-                cancelledConsultation.getSpecialist().getAccountEntity().getUsername()
-        ));
+        ConsultationEvent event = createConsultationEvent(cancelledConsultation, TypeStatus.CANCELLED);
 
-        // Освобождение расписания
+        sendConsultationEvent(event, consultation);
+
         ScheduleEntity schedule = consultation.getSchedule();
         schedule.setClient(null);
         scheduleService.update(schedule);
@@ -134,12 +123,26 @@ public class ConsultationServiceImpl implements ConsultationService {
         return consultationMapper.toDTO(cancelledConsultation);
     }
 
+    private void sendConsultationEvent(ConsultationEvent event, ConsultationEntity consultation) {
+        kafkaTemplate.send(kafkaTopicProperties.getConsultationTopic(), event).whenComplete((result, ex) -> {
+            consultation.setNotificationCreated(ex == null);
+            consultationRepository.save(consultation);
+        });
+    }
 
     @Override
-    public void markReminderSent(Long consultationId) {
-        ConsultationEntity consultation = consultationRepository.findById(consultationId)
-                .orElseThrow(() -> new NotFoundException("Consultation not found"));
-        consultation.setReminderSent(true);
-        consultationRepository.save(consultation);
+    public List<ConsultationEntity> getNotificationCreatedFalse(int page, int size) {
+        return consultationRepository.findByNotificationCreatedFalse(PageRequest.of(page, size));
+    }
+
+    @Override
+    public ConsultationEvent createConsultationEvent(ConsultationEntity consultation, TypeStatus status) {
+        ConsultationEvent event = new ConsultationEvent();
+        event.setConsultationId(consultation.getId());
+        event.setClientEmail(consultation.getClient().getAccountEntity().getUsername());
+        event.setSpecialistEmail(consultation.getSpecialist().getAccountEntity().getUsername());
+        event.setConsultationDate(consultation.getSchedule().getStartTime().toLocalDate());
+        event.setStatus(status);
+        return event;
     }
 }

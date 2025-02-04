@@ -28,6 +28,6 @@ public class ConsultationEntity {
     @Column(name = "status", nullable = false, length = 50)
     private TypeStatus status;
 
-    @Column(name = "reminder_sent", nullable = false)
-    private Boolean reminderSent;
+    @Column(name = "notification_created", nullable = false)
+    private boolean notificationCreated;
 }

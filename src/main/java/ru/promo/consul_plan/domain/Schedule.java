@@ -13,7 +13,6 @@ public class Schedule {
     @NotNull(message = "Идентификатор специалиста не может быть пустым")
     @Positive(message = "Идентификатор специалиста должен быть положительным числом")
     private Long specialistId;
-    @NotNull(message = "Идентификатор клиента не может быть пустым")
     @Positive(message = "Идентификатор клиента должен быть положительным числом")
     private Long clientId;
     @NotNull(message = "Время начала не может быть пустым")

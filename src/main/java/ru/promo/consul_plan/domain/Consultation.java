@@ -10,5 +10,5 @@ public class Consultation {
     private Long clientId;
     private Long scheduleId;
     private TypeStatus status;
-    private Boolean reminderSent;
+    private Boolean notificationCreated;
 }

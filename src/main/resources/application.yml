@@ -15,11 +15,23 @@ spring:
       hibernate:
         format_sql: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+
 feign:
   client:
     config:
       notification-service:
         url: http://localhost:8181
+
+retry:
+  scheduler:
+    enabled: true
+    cron: "0 */10 * * * ?"
+
+kafka-topic:
+  consultation-topic: "consultation-topic"
+
 
 security:
   config:

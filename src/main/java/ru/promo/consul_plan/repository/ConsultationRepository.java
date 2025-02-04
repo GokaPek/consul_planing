@@ -1,5 +1,7 @@
 package ru.promo.consul_plan.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,14 +10,10 @@ import ru.promo.consul_plan.domain.entity.ConsultationEntity;
 import java.util.List;
 
 public interface ConsultationRepository extends JpaRepository<ConsultationEntity, Long> {
-    @Query("SELECT c FROM ConsultationEntity c WHERE c.status = :status")
-    List<ConsultationEntity> findByStatus(@Param("status") String status);
 
-    @Query("SELECT c FROM ConsultationEntity c WHERE c.client.id = :clientId")
-    List<ConsultationEntity> findByClientId(@Param("clientId") Long clientId);
+    List<ConsultationEntity> findByClientId(Long clientId);
 
-    @Query("SELECT c FROM ConsultationEntity c WHERE c.specialist.id = :specialistId")
-    List<ConsultationEntity> findBySpecialistId(@Param("specialistId") Long specialistId);
+    List<ConsultationEntity> findBySpecialistId(Long specialistId);
 
-    List<ConsultationEntity> findAllByClientId(Long clientId);
+    List<ConsultationEntity> findByNotificationCreatedFalse(Pageable page);
 }
