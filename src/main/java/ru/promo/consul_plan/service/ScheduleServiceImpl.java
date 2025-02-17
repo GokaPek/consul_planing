@@ -1,6 +1,5 @@
 package ru.promo.consul_plan.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +9,7 @@ import ru.promo.consul_plan.domain.Schedule;
 import ru.promo.consul_plan.domain.entity.ScheduleEntity;
 import ru.promo.consul_plan.domain.entity.SpecialistEntity;
 import ru.promo.consul_plan.exception.NotFoundException;
+import ru.promo.consul_plan.mapper.ScheduleEntityMapper;
 import ru.promo.consul_plan.mapper.ScheduleMapper;
 import ru.promo.consul_plan.repository.ScheduleRepository;
 
@@ -24,49 +24,32 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class ScheduleServiceImpl implements ScheduleService {
-
     private static final String CACHE_PREFIX = "schedule_";
     private final ScheduleRepository scheduleRepository;
     private final SpecialistService specialistService;
     private final ScheduleMapper scheduleMapper;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final ScheduleEntityMapper scheduleEntityMapper;
+    private final RedisTemplate<String, Schedule> redisTemplate;
 
     @Override
     public void create(Schedule dto) {
-        SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
-
-        ScheduleEntity entity = new ScheduleEntity();
-        entity.setSpecialist(specialist);
-        entity.setStartTime(dto.getStartTime());
-        entity.setEndTime(dto.getEndTime());
-
-        redisTemplate.opsForValue().set(CACHE_PREFIX + dto.getId(), dto, 1, TimeUnit.HOURS);
-
-        scheduleRepository.save(entity);
+        ScheduleEntity entity = scheduleEntityMapper.toEntity(dto);
+        ScheduleEntity savedEntity = scheduleRepository.save(entity);
+        dto.setId(savedEntity.getId());
+        saveToRedis(CACHE_PREFIX + savedEntity.getId(), dto);
     }
-
-    private final ObjectMapper objectMapper;
 
     @Override
     public Schedule getDTOById(Long id) {
         String key = CACHE_PREFIX + id;
-
-        Object cachedSchedule = redisTemplate.opsForValue().get(key);
+        Schedule cachedSchedule = getFromRedis(key);
         if (cachedSchedule != null) {
-            try {
-                return objectMapper.readValue(objectMapper.writeValueAsBytes(cachedSchedule), Schedule.class);
-            } catch (Exception e) {
-                log.error("Error deserializing from Redis: {}", e.getMessage(), e);
-            }
+            return cachedSchedule;
         }
-
         ScheduleEntity entity = scheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + id));
-
         Schedule schedule = scheduleMapper.toDTO(entity);
-
-        redisTemplate.opsForValue().set(key, schedule, 1, TimeUnit.HOURS);
-
+        saveToRedis(key, schedule);
         return schedule;
     }
 
@@ -78,19 +61,20 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void update(Schedule dto) {
-        if (scheduleRepository.existsById(dto.getId())) {
-            SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
-
-            ScheduleEntity entity = new ScheduleEntity();
-            entity.setId(dto.getId());
-            entity.setSpecialist(specialist);
-            entity.setStartTime(dto.getStartTime());
-            entity.setEndTime(dto.getEndTime());
-
-            scheduleRepository.save(entity);
-
-            redisTemplate.opsForValue().set(CACHE_PREFIX + dto.getId(), dto, 1, TimeUnit.HOURS);
+        if (!scheduleRepository.existsById(dto.getId())) {
+            throw new NotFoundException("Schedule not found with id: " + dto.getId());
         }
+
+        ScheduleEntity existingEntity = scheduleRepository.findById(dto.getId())
+                .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + dto.getId()));
+
+        SpecialistEntity specialist = specialistService.getById(dto.getSpecialistId());
+        existingEntity.setSpecialist(specialist);
+        existingEntity.setStartTime(dto.getStartTime());
+        existingEntity.setEndTime(dto.getEndTime());
+
+        scheduleRepository.save(existingEntity);
+        saveToRedis(CACHE_PREFIX + dto.getId(), dto);
     }
 
     @Override
@@ -103,16 +87,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void delete(Long id) {
         scheduleRepository.deleteById(id);
-
-        // Удаляем данные из Redis
-        redisTemplate.delete(CACHE_PREFIX + id);
+        deleteFromRedis(CACHE_PREFIX + id);
     }
 
     @Override
     public List<Schedule> getAllBySpecialistId(Long specialistId) {
         return scheduleMapper.toDTOlist(scheduleRepository.findAllBySpecialistIdAndClientIsNull(specialistId));
     }
-
     @Override
     @Transactional
     public List<Schedule> getAll() {
@@ -125,5 +106,30 @@ public class ScheduleServiceImpl implements ScheduleService {
         LocalDateTime endOfDay = localDate.atTime(LocalTime.MAX);
 
         return scheduleMapper.toDTOlist(scheduleRepository.findAllByStartTimeBetween(startOfDay, endOfDay));
+    }
+
+    private Schedule getFromRedis(String key) {
+        try {
+            return redisTemplate.opsForValue().get(key);
+        } catch (Exception e) {
+            log.error("Error reading from Redis with key '{}': {}", key, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    private void saveToRedis(String key, Schedule schedule) {
+        try {
+            redisTemplate.opsForValue().set(key, schedule, 1, TimeUnit.HOURS);
+        } catch (Exception e) {
+            log.error("Error saving to Redis with key '{}': {}", key, e.getMessage(), e);
+        }
+    }
+
+    private void deleteFromRedis(String key) {
+        try {
+            redisTemplate.delete(key);
+        } catch (Exception e) {
+            log.error("Error deleting from Redis with key '{}': {}", key, e.getMessage(), e);
+        }
     }
 }
