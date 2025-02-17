@@ -46,11 +46,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (cachedSchedule != null) {
             return cachedSchedule;
         }
-        ScheduleEntity entity = scheduleRepository.findById(id)
+        return scheduleRepository.findById(id)
+                .map(scheduleEntity -> {
+                    Schedule schedule = scheduleMapper.toDTO(scheduleEntity);
+                    saveToRedis(CACHE_PREFIX + id, schedule);
+                    return schedule;
+                })
                 .orElseThrow(() -> new NotFoundException("Schedule not found with id: " + id));
-        Schedule schedule = scheduleMapper.toDTO(entity);
-        saveToRedis(key, schedule);
-        return schedule;
     }
 
     @Override
