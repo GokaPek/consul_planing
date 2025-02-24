@@ -17,14 +17,16 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@ConditionalOnProperty
+@ConditionalOnProperty(
+        prefix = "retry.scheduler",
+        name = "enabled",
+        havingValue = "true")
 public class RetryNotificationScheduler {
 
+    private static final int PAGE_SIZE = 50;
     private final ConsultationService consultationService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final KafkaTopicProperties kafkaTopicProperties;
-
-    private static final int PAGE_SIZE = 50;
 
     @Scheduled(cron = "${retry.scheduler.cron}")
     @Transactional
